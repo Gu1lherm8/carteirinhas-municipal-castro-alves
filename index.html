@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Castro Alves | Central de Carteirinhas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    /* RESET E BASE */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Outfit', sans-serif; background: #1a0e08; min-height: 100vh; color: #fff; transition: background 0.3s; display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem 4rem; }
+
+    /* MENU SPA */
+    #main-menu { text-align: center; max-width: 700px; width: 100%; margin: 2rem auto; animation: fadeIn 0.5s ease; }
+    #main-menu h1 { font-size: 2.2rem; font-weight: 900; background: linear-gradient(135deg, #f8fafc, #94a3b8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+    #main-menu p { color: #94a3b8; margin-bottom: 2rem; }
+    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .menu-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2rem; cursor: pointer; transition: transform 0.2s, background 0.2s, border-color 0.2s; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+    .menu-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
+    .menu-icon { font-size: 2.5rem; }
+    .menu-title { font-size: 1.2rem; font-weight: 700; }
+    .menu-desc { font-size: 0.85rem; opacity: 0.7; }
+    
+    .card-escolar-btn { border-bottom: 4px solid #c84b1f; }
+    .card-saida-btn { border-bottom: 4px solid #1d4ed8; }
+
+    /* SEÇÕES SPA */
+    .app-section { display: none; width: 100%; max-width: 1100px; animation: slideUp 0.4s ease-out; }
+    .btn-voltar { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; font-family: inherit; font-size: 0.82rem; font-weight: 600; padding: 0.5rem 1rem; cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 1.5rem; }
+    .btn-voltar:hover { background: rgba(255,255,255,0.2); }
+
+    /* HEADER DAS SEÇOES (DESIGN PREMIUM) */
+    .page-header { text-align: center; margin-bottom: 2.5rem; }
+    .page-header h1 { font-size: 2.2rem; font-weight: 900; margin-bottom: 0.3rem; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    #escolar .page-header h1 { background: linear-gradient(135deg, #f5c87a, #e8763a); }
+    #saida .page-header h1 { background: linear-gradient(135deg, #93c5fd, #3b82f6); }
+    .page-header p { color: #a07050; font-size: 0.95rem; }
+    #saida .page-header p { color: #94a3b8; }
+
+    /* DB STATUS E LOGOUT (Estilo app(2)) */
+    .header-tools { display: flex; align-items: center; justify-content: center; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.6rem; }
+    .db-status { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 0.3rem 0.9rem; font-size: 0.78rem; }
+    .db-status .dot { width: 7px; height: 7px; border-radius: 50%; background: #888; flex-shrink: 0; }
+    .db-status.loaded .dot { background: #6db87a; }
+    .db-status.loading .dot { background: #f5c87a; animation: pulse 0.8s infinite; }
+    .db-status.error .dot { background: #e05555; }
+    @keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:0.3; } }
+    .btn-logout { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 0.82rem; padding: 0.4rem 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+
+    /* LAYOUT PRINCIPAL */
+    .main-layout { display: grid; grid-template-columns: 340px 1fr; gap: 2rem; align-items: start; }
+    .form-panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(10px); position: sticky; top: 1rem; }
+    .form-panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.2rem; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    #escolar .form-panel h2 { color: #f5c87a; }
+    #saida .form-panel h2 { color: #93c5fd; }
+    
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .form-group select, .form-group input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; color: #fff; font-family: inherit; font-size: 0.92rem; padding: 0.7rem 0.9rem; outline: none; transition: border-color 0.2s; }
+    .form-group select:focus, .form-group input:focus { border-color: #e8763a; }
+    #saida .form-group select:focus, #saida .form-group input:focus { border-color: #3b82f6; }
+
+    .photo-upload-area { width: 100%; height: 95px; border: 2px dashed rgba(255,255,255,0.2); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; gap: 0.4rem; transition: background 0.2s, border-color 0.2s; }
+    .photo-upload-area:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.4); }
+    .photo-upload-area span { font-size: 0.75rem; color: #94a3b8; }
+
+    /* BOTÕES DE AÇÃO */
+    .btn-actions { display: flex; gap: 0.8rem; margin-top: 1.5rem; flex-direction: column; }
+    .btn-add { width: 100%; padding: 0.9rem; border: none; border-radius: 12px; color: white; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: transform 0.2s; }
+    .btn-add:hover { transform: scale(1.02); }
+    .btn-add:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+    #escolar .btn-add { background: #a04018; }
+    #saida .btn-add { background: #1e3a8a; }
+
+    .btn-print-sheet { width: 100%; padding: 0.9rem; background: linear-gradient(135deg, #c84b1f, #e8763a); border: none; border-radius: 12px; color: white; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(200, 75, 31, 0.4); }
+    #saida .btn-print-sheet { background: linear-gradient(135deg, #1d4ed8, #3b82f6); box-shadow: 0 4px 15px rgba(29, 78, 216, 0.4); }
+    
+    .btn-clear { background: transparent; border: 1px solid rgba(255,0,0,0.3); color: #ff8080; padding: 0.7rem; border-radius: 10px; font-weight: 600; cursor: pointer; margin-top: 5px; }
+    .btn-clear:hover { background: rgba(255,0,0,0.1); }
+
+    /* CARTEIRINHA (DESIGN 680px) */
+    .card-panel { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .preview-label { text-align: center; font-size: 0.78rem; opacity: 0.6; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .carteirinha-preview { width: 680px; background: #ffffff; border-radius: 15px; overflow: hidden; box-shadow: 0 25px 70px rgba(0,0,0,0.7); font-family: 'Outfit', sans-serif; position: relative; }
+    .card-header { position: relative; height: 110px; overflow: hidden; display: flex; align-items: center; justify-content: flex-end; padding-right: 25px; }
+    .card-header::before { content: ''; position: absolute; inset: 0; z-index: 1; }
+    #escolar .card-header::before { background: linear-gradient(125deg, #7B3A18 0%, #7B3A18 30%, transparent 30%), linear-gradient(200deg, #9B4E20 0%, #9B4E20 20%, transparent 20%), linear-gradient(80deg,  #3D1608 45%, transparent 45%), linear-gradient(160deg, #6B3015 55%, transparent 55%), linear-gradient(45deg,  #AA5528 70%, transparent 70%), linear-gradient(260deg, #441A06 65%, transparent 65%); }
+    #saida .card-header::before { background: linear-gradient(125deg, #1e40af 0%, #172554 30%, transparent 30%), linear-gradient(200deg, #1d4ed8 0%, #1e3a8a 20%, transparent 20%), linear-gradient(80deg,  #0f172a 45%, transparent 45%), linear-gradient(160deg, #2563eb 55%, transparent 55%), linear-gradient(45deg,  #3b82f6 70%, transparent 70%); }
+    .card-header-bg { position: absolute; inset: 0; z-index: 0; }
+    #escolar .card-header { background: #5C2308; }
+    #saida .card-header { background: #1e3a8a; }
+
+    .school-logo-wrap { position: relative; z-index: 2; display: flex; align-items: center; gap: 14px; flex-direction: row-reverse; }
+    .school-logo { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #F5C030; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .school-logo img { width: 100%; height: 100%; object-fit: cover; }
+    .school-name { color: #fff; line-height: 1.2; text-align: right; }
+    .school-name .line1 { font-size: 0.85rem; font-weight: 400; opacity: 0.85; }
+    .school-name .line2 { font-size: 1.25rem; font-weight: 900; }
+
+    .card-body { display: flex; min-height: 270px; background: #fbf9f6; }
+    #saida .card-body { background: #f0f7ff; }
+    .card-left { width: 220px; display: flex; flex-direction: column; align-items: center; padding: 20px 10px; gap: 12px; background: #fff; border-right: 1px solid #eee; flex-shrink: 0; }
+    .photo-circle { width: 155px; height: 155px; border-radius: 50%; border: 3px solid #C07030; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #eee; }
+    #saida .photo-circle { border-color: #3b82f6; }
+    .photo-circle img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .qr-area { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .qr-code-div { width: 85px; height: 85px; background: #fff; }
+    .qr-code-div img, .qr-code-div canvas { width: 85px !important; height: 85px !important; }
+    .qr-label { font-size: 0.7rem; font-weight: 700; text-align: center; text-transform: uppercase; }
+    #escolar .qr-label { color: #C84B1F; }
+    #saida .qr-label { color: #1d4ed8; }
+
+    .card-right { flex: 1; padding: 20px 25px; display: flex; flex-direction: column; }
+    .card-title { font-size: 0.95rem; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.04em; }
+    #escolar .card-title { color: #C84B1F; }
+    #saida .card-title { color: #1d4ed8; }
+    
+    .data-grid { display: grid; grid-template-columns: auto 1fr; gap: 10px 15px; align-items: center; }
+    .data-label { font-size: 0.8rem; font-weight: 700; color: #5C2308; white-space: nowrap; }
+    #saida .data-label { color: #1e3a8a; }
+    .data-value { font-size: 0.88rem; color: #111; font-weight: 500; border-bottom: 1px solid #e0ddd0; padding-bottom: 3px; min-height: 20px; }
+    #saida .data-value { border-bottom-color: #dbeafe; }
+
+    .card-footer { background: #fff; padding: 15px 25px; border-top: 1px solid #eee; }
+    .auth-button { width: 100%; padding: 12px; border-radius: 30px; color: #fff; font-size: 0.8rem; font-weight: 700; font-style: italic; text-align: center; }
+    #escolar .auth-button { background: #C84B1F; }
+    #saida .auth-button { background: #1d4ed8; }
+    .card-watermark { text-align: right; font-size: 0.6rem; color: #aaa; margin-top: 5px; }
+
+    /* FILA DE IMPRESSÃO */
+    .fila-header { width: 100%; text-align: center; margin: 3rem 0 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; }
+    .fila-header h3 { font-size: 1.3rem; margin-bottom: 0.5rem; color: #f5c87a; }
+    .fila-stats { font-size: 0.85rem; opacity: 0.6; }
+    .pagina-impressao { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; width: 100%; margin-top: 1.5rem; }
+
+    /* CARTEIRINHA NA FILA (10cm x 7cm) */
+    .carteirinha-fila { width: 10cm; height: 7cm; min-height: 7cm; max-height: 7cm; background: #fff; border-radius: 12px; overflow: hidden; position: relative; border: 1px solid #ddd; display: flex; flex-direction: column; flex-shrink: 0; box-shadow: 0 5px 15px rgba(0,0,0,0.3); page-break-inside: avoid; }
+    .carteirinha-fila .card-header { flex: 0 0 1.6cm; height: 1.6cm; padding-right: 12px; }
+    .carteirinha-fila .school-logo { width: 38px; height: 38px; border-width: 2px; }
+    .carteirinha-fila .school-name .line1 { font-size: 9px; }
+    .carteirinha-fila .school-name .line2 { font-size: 13px; }
+    .carteirinha-fila .card-body { flex: 1; min-height: 0; }
+    .carteirinha-fila .card-left { flex: 0 0 3.2cm; width: 3.2cm; padding: 10px 5px; }
+    .carteirinha-fila .photo-circle { width: 2.7cm; height: 2.7cm; border-width: 2px; }
+    .carteirinha-fila .qr-code-div { width: 2.2cm; height: 2.2cm; }
+    .carteirinha-fila .qr-code-div img, .carteirinha-fila .qr-code-div canvas { width: 2.2cm !important; height: 2.2cm !important; }
+    .carteirinha-fila .qr-label { font-size: 7px; }
+    .carteirinha-fila .card-right { padding: 8px 12px; }
+    .carteirinha-fila .card-title { font-size: 9px; margin-bottom: 6px; }
+    .carteirinha-fila .data-grid { gap: 4px 8px; }
+    .carteirinha-fila .data-label { font-size: 8px; }
+    .carteirinha-fila .data-value { font-size: 10px; min-height: 14px; padding-bottom: 1px; }
+    .carteirinha-fila .card-footer { padding: 8px 15px; border-top: none; }
+    .carteirinha-fila .auth-button { padding: 6px; font-size: 7px; border-radius: 50px; }
+    .carteirinha-fila .card-watermark { font-size: 5px; margin-top: 2px; }
+
+    /* ANIMAÇÕES */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* RESPONSIVIDADE */
+    @media (max-width: 1080px) {
+      .main-layout { grid-template-columns: 1fr; }
+      .form-panel { position: static; }
+      .card-panel { overflow-x: auto; width: 100%; padding-bottom: 2rem; align-items: flex-start; }
+      .carteirinha-preview { min-width: 680px; }
+      .menu-grid { grid-template-columns: 1fr; }
+    }
+
+    /* IMPRESSÃO */
+    @media print {
+      @page { size: A4 portrait; margin: 0.8cm; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: white !important; padding: 0; display: block; }
+      #main-menu, .app-section .btn-voltar, .app-section .page-header, .form-panel, .preview-label, .carteirinha-preview, .fila-header, .btn-logout { display: none !important; }
+      .app-section { display: none; }
+      .app-section.active { display: block !important; }
+      .main-layout { display: block; padding: 0; }
+      .card-panel { display: block; }
+      .pagina-impressao { display: grid !important; grid-template-columns: 10cm 10cm; gap: 8px; justify-content: center; }
+      .carteirinha-fila { box-shadow: none !important; border: 1px solid #ccc; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MENU PRINCIPAL -->
+  <div id="main-menu">
+    <header class="page-header">
+      <h1>&#127979; Gerador de Carteirinhas</h1>
+      <p>Escola Municipal Castro Alves</p>
+      <div class="header-tools">
+        <span class="db-status loading" id="global-db-status">
+          <span class="dot"></span>
+          <span id="global-db-status-text">Verificando banco de dados...</span>
+        </span>
+        <button class="btn-logout" onclick="fazerLogout()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Sair
+        </button>
+      </div>
+    </header>
+
+    <div class="menu-grid">
+      <div class="menu-card card-escolar-btn" onclick="showSection('escolar')">
+        <span class="menu-icon">&#128218;</span>
+        <span class="menu-title">Transporte Escolar</span>
+        <span class="menu-desc">Geração em lote via planilha Google</span>
+      </div>
+      <div class="menu-card card-saida-btn" onclick="showSection('saida')">
+        <span class="menu-icon">&#128682;</span>
+        <span class="menu-title">Saída Antecipada</span>
+        <span class="menu-desc">Autorização para saída do estudante</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO ESCOLAR -->
+  <section id="escolar" class="app-section">
+    <button class="btn-voltar" onclick="goHome()">&#11013; Voltar ao Menu</button>
+    <header class="page-header">
+      <h1>Carteirinha Escolar</h1>
+      <p>Transporte Escolar &#8212; Base Nuvem Ativa</p>
+    </header>
+
+    <div class="main-layout">
+      <aside class="form-panel">
+        <h2>&#128221; Dados do Aluno</h2>
+        <div class="form-group">
+          <label>Selecionar Aluno da Lista</label>
+          <select id="esc-sel-aluno">
+            <option value="">&#8212; Carregando lista... &#8212;</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Nome Completo *</label><input type="text" id="esc-inp-nome" oninput="updateEsc()"></div>
+        <div class="form-group"><label>Matrícula</label><input type="text" id="esc-inp-mat" oninput="updateEsc()"></div>
+        <div class="form-group"><label>Data de Nascimento</label><input type="text" id="esc-inp-dn" oninput="updateEsc()"></div>
+        <div class="form-group"><label>Endereço</label><input type="text" id="esc-inp-end" oninput="updateEsc()"></div>
+        <div class="form-group"><label>Linha do Ônibus *</label><input type="text" id="esc-inp-linha" oninput="updateEsc()"></div>
+        <div class="form-group"><label>Telefone Resp. (WhatsApp)</label><input type="text" id="esc-inp-tel" oninput="updateEscQR()"></div>
+        <div class="form-group">
+          <label>Foto do Aluno</label>
+          <div class="photo-upload-area" onclick="document.getElementById('esc-photo-input').click()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <span>Clique para selecionar</span>
+          </div>
+          <input type="file" id="esc-photo-input" style="display:none" accept="image/*" onchange="loadPhoto(this, 'esc-photo-preview')">
+        </div>
+
+        <div class="btn-actions">
+          <button class="btn-add" id="esc-btn-add" onclick="addToSheet('escolar')" disabled>&#10133; Adicionar à Folha</button>
+          <button class="btn-print-sheet" onclick="window.print()">&#128424; Imprimir Folha</button>
+          <button class="btn-clear" onclick="clearFila('escolar')">&#128465; Limpar Folha</button>
+        </div>
+      </aside>
+
+      <div class="card-panel">
+        <div class="preview-label">✏️ PRÉVIA (Design Premium 680px)</div>
+        <div class="carteirinha-preview" id="esc-preview">
+          <div class="card-header">
+            <div class="school-logo-wrap">
+              <div class="school-logo"><img src="logo_escola.png" alt="Logo"></div>
+              <div class="school-name"><div class="line1">Escola Municipal</div><div class="line2">Castro Alves</div></div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-left">
+              <div class="photo-circle"><img id="esc-photo-preview" style="display:none"></div>
+              <div class="qr-area"><div id="esc-qr-div" class="qr-code-div"></div><div class="qr-label">Contato Responsável</div></div>
+            </div>
+            <div class="card-right">
+              <div class="card-title">IDENTIFICA&Ccedil;&Atilde;O DA CRIAN&Ccedil;A<br>E/OU ESTUDANTE</div>
+              <div class="data-grid">
+                <div class="data-label">Nome:</div><div class="data-value" id="card-esc-nome"></div>
+                <div class="data-label">Matrícula:</div><div class="data-value" id="card-esc-mat"></div>
+                <div class="data-label">D.N:</div><div class="data-value" id="card-esc-dn"></div>
+                <div class="data-label">Endereço:</div><div class="data-value" id="card-esc-end"></div>
+                <div class="data-label">Linha:</div><div class="data-value" id="card-esc-linha"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="auth-button">Autorização para as crianças e/ou estudantes que utilizam transporte escolar</div>
+            <div class="card-watermark">Uso exclusivo para estudantes - Transporte Escolar</div>
+          </div>
+        </div>
+
+        <div class="fila-header">
+          <h3 id="esc-fila-count-title">&#128424; Folha de Impressão</h3>
+          <p class="fila-stats" id="esc-fila-stats">Nenhuma carteirinha adicionada.</p>
+        </div>
+        <div class="pagina-impressao" id="esc-fila-container"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO SAÍDA -->
+  <section id="saida" class="app-section">
+    <button class="btn-voltar" onclick="goHome()">&#11013; Voltar ao Menu</button>
+    <header class="page-header">
+      <h1>Saída Antecipada</h1>
+      <p>Gerenciamento de Autorização de Saída</p>
+    </header>
+
+    <div class="main-layout">
+      <aside class="form-panel">
+        <h2>&#128221; Dados da Liberação</h2>
+        <div class="form-group"><label>Nome do Aluno *</label><input type="text" id="sai-inp-nome" oninput="updateSai()"></div>
+        <div class="form-group"><label>Turma *</label><input type="text" id="sai-inp-turma" oninput="updateSai()"></div>
+        <div class="form-group"><label>Responsável *</label><input type="text" id="sai-inp-resp" oninput="updateSai()"></div>
+        <div class="form-group"><label>Motivo</label><input type="text" id="sai-inp-motivo" placeholder="Consulta Médica, etc" oninput="updateSai()"></div>
+        <div class="form-group"><label>Data *</label><input type="text" id="sai-inp-data" placeholder="DD/MM/AAAA" oninput="updateSai()"></div>
+        <div class="form-group">
+          <label>Foto do Aluno</label>
+          <div class="photo-upload-area" onclick="document.getElementById('sai-photo-input').click()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <span>Opcional</span>
+          </div>
+          <input type="file" id="sai-photo-input" style="display:none" accept="image/*" onchange="loadPhoto(this, 'sai-photo-preview')">
+        </div>
+
+        <div class="btn-actions">
+          <button class="btn-add" id="sai-btn-add" onclick="addToSheet('saida')" disabled>&#10133; Adicionar à Folha</button>
+          <button class="btn-print-sheet" onclick="window.print()">&#128424; Imprimir Folha</button>
+          <button class="btn-clear" onclick="clearFila('saida')">&#128465; Limpar Folha</button>
+        </div>
+      </aside>
+
+      <div class="card-panel">
+        <div class="preview-label">✏️ PRÉVIA (Design Premium Azul)</div>
+        <div class="carteirinha-preview" id="sai-preview">
+          <div class="card-header">
+            <div class="school-logo-wrap">
+              <div class="school-logo"><img src="logo_escola.png" alt="Logo"></div>
+              <div class="school-name"><div class="line1">Escola Municipal</div><div class="line2">Castro Alves</div></div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-left">
+              <div class="photo-circle"><img id="sai-photo-preview" style="display:none"></div>
+              <div class="qr-area"><div id="sai-qr-div" class="qr-code-div"></div><div class="qr-label">Gestão Escolar</div></div>
+            </div>
+            <div class="card-right">
+              <div class="card-title">AUTORIZAÇÃO DE<br>SAÍDA ANTECIPADA</div>
+              <div class="data-grid">
+                <div class="data-label">Aluno(a):</div><div class="data-value" id="card-sai-nome"></div>
+                <div class="data-label">Turma:</div><div class="data-value" id="card-sai-turma"></div>
+                <div class="data-label">Responsável:</div><div class="data-value" id="card-sai-resp"></div>
+                <div class="data-label">Motivo:</div><div class="data-value" id="card-sai-motivo"></div>
+                <div class="data-label">Data:</div><div class="data-value" id="card-sai-data"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="auth-button">Autorização para saída antecipada do estudante da unidade escolar</div>
+            <div class="card-watermark">Controle de Saída Antecipada - Secretaria</div>
+          </div>
+        </div>
+
+        <div class="fila-header">
+          <h3 id="sai-fila-count-title">&#128424; Folha de Impressão</h3>
+          <p class="fila-stats" id="sai-fila-stats">Nenhuma autorização adicionada.</p>
+        </div>
+        <div class="pagina-impressao" id="sai-fila-container"></div>
+      </div>
+    </div>
+  </section>
+
+<script>
+  // ===== AUTENTICAÇÃO E NAVEGAÇÃO =====
+  if (localStorage.getItem('castroalves_auth') !== 'ok') { window.location.href = 'login.html'; }
+  function fazerLogout() { localStorage.removeItem('castroalves_auth'); window.location.href = 'login.html'; }
+
+  function showSection(id) {
+    document.getElementById('main-menu').style.display = 'none';
+    document.querySelectorAll('.app-section').forEach(s => { s.style.display = 'none'; s.classList.remove('active'); });
+    const section = document.getElementById(id);
+    section.style.display = 'block';
+    section.classList.add('active');
+    document.body.style.background = id === 'escolar' ? '#1a0e08' : '#0f172a';
+  }
+
+  function goHome() {
+    document.getElementById('main-menu').style.display = 'block';
+    document.querySelectorAll('.app-section').forEach(s => { s.style.display = 'none'; s.classList.remove('active'); });
+    document.body.style.background = '#1a0e08';
+  }
+
+  // ===== CARREGAMENTO DE DADOS (PLANILHA GOOGLE) =====
+  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQuTw8zJ1deJ5MmUB7GAjtnA0xo125BSx8x2S-P4Bju4uK-uO6XaWlLO9yI-0tHuw/pub?gid=1316350613&single=true&output=csv';
+  let ALUNOS = [];
+
+  async function initDatabase() {
+    const statusText = document.getElementById('global-db-status-text');
+    const statusDiv = document.getElementById('global-db-status');
+    try {
+      const resp = await fetch(SHEET_URL);
+      if (!resp.ok) throw new Error();
+      const text = await resp.text();
+      const lines = text.trim().split('\n');
+      ALUNOS = [];
+      for(let i=1; i<lines.length; i++) {
+        const cols = lines[i].split(',').map(c => c.replace(/^"|"$/g, '').trim());
+        if(cols[0]) ALUNOS.push({nome:cols[0], mat:cols[1], dn:cols[2], resp:cols[4], tel:cols[5], end:cols[6], linha:cols[7]});
+      }
+      populateEscSelect();
+      statusDiv.className = 'db-status loaded';
+      statusText.textContent = `${ALUNOS.length} alunos carregados ✓`;
+    } catch(e) {
+      statusDiv.className = 'db-status error';
+      statusText.textContent = 'Erro ao sincronizar nuvem.';
+    }
+  }
+
+  function populateEscSelect() {
+    const sel = document.getElementById('esc-sel-aluno');
+    sel.innerHTML = '<option value="">-- Selecione ou preencha manual --</option>';
+    ALUNOS.forEach((a, i) => {
+      const opt = document.createElement('option');
+      opt.value = i; opt.textContent = `${a.nome} (${a.linha || 'S/L'})`;
+      sel.appendChild(opt);
+    });
+  }
+
+  document.getElementById('esc-sel-aluno').addEventListener('change', function() {
+    const a = ALUNOS[this.value];
+    if(!a) return;
+    document.getElementById('esc-inp-nome').value = a.nome;
+    document.getElementById('esc-inp-mat').value = a.mat;
+    document.getElementById('esc-inp-dn').value = a.dn;
+    document.getElementById('esc-inp-end').value = a.end;
+    document.getElementById('esc-inp-linha').value = a.linha;
+    document.getElementById('esc-inp-tel').value = a.tel;
+    updateEsc(); updateEscQR();
+  });
+
+  // ===== LÓGICA ESCOLAR =====
+  function updateEsc() {
+    const n = document.getElementById('esc-inp-nome').value.trim();
+    const l = document.getElementById('esc-inp-linha').value.trim();
+    document.getElementById('card-esc-nome').textContent = n;
+    document.getElementById('card-esc-mat').textContent = document.getElementById('esc-inp-mat').value;
+    document.getElementById('card-esc-dn').textContent = document.getElementById('esc-inp-dn').value;
+    document.getElementById('card-esc-end').textContent = document.getElementById('esc-inp-end').value;
+    document.getElementById('card-esc-linha').textContent = l;
+    document.getElementById('esc-btn-add').disabled = !(n && l);
+  }
+
+  function updateEscQR() {
+    const tel = document.getElementById('esc-inp-tel').value.trim();
+    const container = document.getElementById('esc-qr-div');
+    container.innerHTML = '';
+    if(tel) {
+      new QRCode(container, { text: `https://wa.me/55${tel.replace(/\D/g,'')}`, width: 85, height: 85, colorDark: "#5C2308", correctLevel: QRCode.CorrectLevel.M });
+    }
+  }
+
+  // ===== LÓGICA SAÍDA =====
+  function updateSai() {
+    const n = document.getElementById('sai-inp-nome').value.trim();
+    const t = document.getElementById('sai-inp-turma').value.trim();
+    const r = document.getElementById('sai-inp-resp').value.trim();
+    const d = document.getElementById('sai-inp-data').value.trim();
+    document.getElementById('card-sai-nome').textContent = n;
+    document.getElementById('card-sai-turma').textContent = t;
+    document.getElementById('card-sai-resp').textContent = r;
+    document.getElementById('card-sai-motivo').textContent = document.getElementById('sai-inp-motivo').value;
+    document.getElementById('card-sai-data').textContent = d;
+    
+    document.getElementById('sai-btn-add').disabled = !(n && t && r && d);
+    
+    // Atualizar QR Saída automático (com dados básicos)
+    const qrDiv = document.getElementById('sai-qr-div');
+    qrDiv.innerHTML = '';
+    if(n && d) {
+       new QRCode(qrDiv, { text: `SAIDA:${n}|DATA:${d}`, width: 85, height: 85, colorDark: "#1e3a8a", correctLevel: QRCode.CorrectLevel.M });
+    }
+  }
+
+  // ===== UTILITÁRIOS GERAIS =====
+  function loadPhoto(input, previewId) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = document.getElementById(previewId);
+        img.src = e.target.result; img.style.display = 'block';
+        input.parentElement.style.background = 'none';
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  function addToSheet(type) {
+    const preview = document.getElementById(`${type === 'escolar' ? 'esc' : 'sai'}-preview`);
+    const container = document.getElementById(`${type === 'escolar' ? 'esc' : 'sai'}-fila-container`);
+    
+    // Clonar e ajustar para o tamanho físico 10x7
+    const wrapper = document.createElement('div');
+    wrapper.className = 'carteirinha-fila';
+    
+    // HTML customizado para o card de impressão (mantendo os dados atuais)
+    const cardHtml = preview.innerHTML;
+    wrapper.innerHTML = cardHtml;
+    
+    // Corrigir QR Code no clone (QRCode.js renderiza canvas/img que precisam ser copiados manualmente)
+    const originalQr = preview.querySelector('.qr-code-div');
+    const cloneQr = wrapper.querySelector('.qr-code-div');
+    const originalImg = originalQr.querySelector('img');
+    const originalCanvas = originalQr.querySelector('canvas');
+    
+    cloneQr.innerHTML = '';
+    if (originalImg && originalImg.src) {
+      const newImg = document.createElement('img'); newImg.src = originalImg.src; cloneQr.appendChild(newImg);
+    } else if (originalCanvas) {
+      const newImg = document.createElement('img'); newImg.src = originalCanvas.toDataURL(); cloneQr.appendChild(newImg);
+    }
+
+    container.appendChild(wrapper);
+    updateFilaStats(type);
+    
+    // Feedback visual
+    const btn = document.getElementById(`${type === 'escolar' ? 'esc' : 'sai'}-btn-add`);
+    const oldText = btn.innerHTML;
+    btn.innerHTML = '&#10004; Adicionado!';
+    setTimeout(() => { btn.innerHTML = oldText; }, 1200);
+  }
+
+  function clearFila(type) {
+    document.getElementById(`${type === 'escolar' ? 'esc' : 'sai'}-fila-container`).innerHTML = '';
+    updateFilaStats(type);
+  }
+
+  function updateFilaStats(type) {
+    const count = document.getElementById(`${type === 'escolar' ? 'esc' : 'sai'}-fila-container`).children.length;
+    const statsEl = document.getElementById(`${type === 'escolar' ? 'esc' : 'sai'}-fila-stats`);
+    if(count === 0) {
+      statsEl.textContent = 'Nenhuma adicionada ainda.';
+    } else {
+      const pages = Math.ceil(count / 2);
+      statsEl.textContent = `${count} item(s) pronto(s) · ~${pages} folha(s) A4`;
+    }
+  }
+
+  window.onload = () => { initDatabase(); updateEsc(); updateSai(); };
+</script>
+</body>
+</html>
