@@ -616,7 +616,7 @@
   }
 
   // ===== GOOGLE SHEETS =====
-  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1_0Nr7rt1RClLouJ_g4saqU7JluswzIWf/gviz/tq?tqx=out:csv&sheet=Sheet1';
+  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQuTw8zJ1deJ5MmUB7GAjtnA0xo125BSx8x2S-P4Bju4uK-uO6XaWlLO9yI-0tHuw/pub?output=csv';
 
   let ALUNOS = [];
 
@@ -649,15 +649,9 @@
     const statusEl   = document.getElementById('db-status');
     const statusText = document.getElementById('db-status-text');
     statusEl.className = 'db-status loading';
-    statusText.textContent = 'Carregando dados...';
-
-    // Timeout de 8s para não travar em dispositivos lentos
-    const controller = new AbortController();
-    const timeoutId  = setTimeout(() => controller.abort(), 8000);
-
+    statusText.textContent = 'Carregando dados da planilha...';
     try {
-      const resp = await fetch(SHEET_CSV_URL, { signal: controller.signal });
-      clearTimeout(timeoutId);
+      const resp = await fetch(SHEET_CSV_URL);
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       const text = await resp.text();
       ALUNOS = parseCSV(text);
@@ -665,12 +659,10 @@
       statusEl.className = 'db-status loaded';
       statusText.textContent = ALUNOS.length + ' alunos carregados ✓';
     } catch (err) {
-      clearTimeout(timeoutId);
-      // FALLBACK: não bloqueia o site — funciona normalmente só com preenchimento manual
       ALUNOS = [];
       statusEl.className = 'db-status error';
-      statusText.textContent = 'Planilha indisponível — preencha manualmente';
-      console.warn('Planilha não carregada:', err.message);
+      statusText.textContent = 'Erro ao carregar planilha — preencha manualmente';
+      console.warn('Planilha indisponível:', err);
     }
   }
 
