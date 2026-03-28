@@ -354,21 +354,21 @@
       border-right: 1px solid #e8ddd0; background: #fff;
     }
     .carteirinha-fila .photo-circle {
-      width: 2.6cm; height: 2.6cm; min-height: 2.6cm;
+      width: 2.4cm; height: 2.4cm; min-width: 2.4cm; min-height: 2.4cm;
       border-radius: 50%; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; border: 2px solid #C07030;
       background: linear-gradient(180deg, #87CEEB 0%, #B8D8F0 40%, #A8D45A 65%, #5A8A20 100%);
     }
-    .carteirinha-fila .photo-circle img { width: 100%; height: 100%; object-fit: cover; }
+    .carteirinha-fila .photo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; aspect-ratio: 1/1; }
     .carteirinha-fila .qr-area {
       display: flex; flex-direction: column;
       align-items: center; gap: 2px; width: 100%;
     }
     .carteirinha-fila .qr-area > div:first-child {
-      width: 2.2cm; height: 2.2cm; overflow: hidden;
+      width: 1.6cm; height: 1.6cm; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
-      background: #fff; padding: 2px;
+      background: #fff; padding: 1px;
     }
     .carteirinha-fila .qr-area > div:first-child img,
     .carteirinha-fila .qr-area > div:first-child canvas { width: 100% !important; height: 100% !important; }
@@ -381,16 +381,16 @@
     }
     .carteirinha-fila .card-title { font-size: 9px; font-weight: 900; color: #C84B1F; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.1; margin-bottom: 7px; }
     .carteirinha-fila .data-grid { display: flex; flex-direction: column; gap: 3px; width: 100%; overflow: hidden; }
-    .carteirinha-fila .linha-info { display: flex; align-items: flex-end; gap: 5px; width: 100%; border-bottom: 1px solid #e8ddd0; padding-bottom: 2px; }
+    .carteirinha-fila .linha-info { display: flex; align-items: baseline; gap: 4px; width: 100%; border-bottom: 1px solid #e8ddd0; padding-bottom: 1px; min-height: 0; overflow: hidden; }
 
     /* FIX OPACIDADE: cores fixas, nunca somem */
-    .carteirinha-fila .data-label { font-size: 8px; font-weight: 700; color: #5C2308; white-space: nowrap; flex-shrink: 0; text-transform: uppercase; }
-    .carteirinha-fila .nome-destaque { font-size: 12px; font-weight: 900; color: #111; white-space: normal; word-break: break-word; line-height: 1.1; flex: 1; }
-    .carteirinha-fila .data-value { font-size: 10px; color: #333; font-weight: 500; white-space: normal; line-height: 1.1; flex: 1; }
+    .carteirinha-fila .data-label { font-size: 7.5px; font-weight: 700; color: #5C2308; white-space: nowrap; flex-shrink: 0; text-transform: uppercase; line-height: 1.2; }
+    .carteirinha-fila .nome-destaque { font-size: 10px; font-weight: 900; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; flex: 1; min-width: 0; }
+    .carteirinha-fila .data-value { font-size: 9px; color: #333; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; flex: 1; min-width: 0; }
 
-    .carteirinha-fila .card-footer-wrapper { flex: 0 0 auto; height: 1.2cm; display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; position: relative; }
-    .carteirinha-fila .card-footer { background: transparent; padding: 6px 10px; display: flex; flex: 1; justify-content: center; align-items: center; position: relative; z-index: 2; }
-    .carteirinha-fila .auth-button { width: 100%; padding: 5px 10px; background: #C84B1F; border-radius: 50px; color: #fff; font-size: 7px; font-weight: 700; text-align: center; line-height: 1.2; font-style: italic; }
+    .carteirinha-fila .card-footer-wrapper { flex: 0 0 1.25cm; height: 1.25cm; min-height: 1.25cm; display: flex; flex-direction: column; overflow: visible; flex-shrink: 0; position: relative; }
+    .carteirinha-fila .card-footer { background: transparent; padding: 4px 8px; display: flex; flex: 1; justify-content: center; align-items: center; position: relative; z-index: 2; }
+    .carteirinha-fila .auth-button { width: 100%; padding: 4px 8px; background: #C84B1F !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; border-radius: 50px; color: #fff !important; font-size: 6.5px; font-weight: 700; text-align: center; line-height: 1.2; font-style: italic; }
     .carteirinha-fila .barra-inferior { height: 10px; width: 100%; flex-shrink: 0; background: #5C2308; }
     .carteirinha-fila .footer-detail { position: absolute; bottom: 12px; right: 8px; font-size: 5px; font-weight: 700; color: rgba(255,255,255,0.6); z-index: 2; pointer-events: none; }
 
@@ -449,9 +449,15 @@
       .carteirinha-fila .data-value  { color: #333 !important; }
       .carteirinha-fila .nome-destaque { color: #111 !important; }
       .carteirinha-fila .card-title  { color: #C84B1F !important; }
-      .carteirinha-fila .auth-button { background: #C84B1F !important; color: #fff !important; }
-      .carteirinha-fila .barra-inferior { background: #5C2308 !important; }
+      .carteirinha-fila .auth-button { background: #C84B1F !important; color: #fff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .carteirinha-fila .card-footer-wrapper { overflow: visible !important; }
+      .carteirinha-fila .barra-inferior { background: #5C2308 !important; display: block !important; height: 10px !important; }
       .carteirinha-fila .qr-label    { color: #C84B1F !important; }
+      /* QR e foto: proporção preservada */
+      .carteirinha-fila .photo-circle { width: 2.4cm !important; height: 2.4cm !important; min-width: 2.4cm !important; min-height: 2.4cm !important; border-radius: 50% !important; overflow: hidden !important; }
+      .carteirinha-fila .photo-circle img { width: 100% !important; height: 100% !important; object-fit: cover !important; aspect-ratio: 1/1 !important; }
+      .carteirinha-fila .qr-area > div:first-child { width: 1.6cm !important; height: 1.6cm !important; overflow: hidden !important; }
+      .carteirinha-fila .qr-area > div:first-child img { width: 100% !important; height: 100% !important; }
     }
   </style>
 </head>
@@ -610,7 +616,7 @@
   }
 
   // ===== GOOGLE SHEETS =====
-  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQuTw8zJ1deJ5MmUB7GAjtnA0xo125BSx8x2S-P4Bju4uK-uO6XaWlLO9yI-0tHuw/pub?gid=1316350613&single=true&output=csv';
+  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQuTw8zJ1deJ5MmUB7GAjtnA0xo125BSx8x2S-P4Bju4uK-uO6XaWlLO9yI-0tHuw/pub?output=csv';
 
   let ALUNOS = [];
 
@@ -653,8 +659,10 @@
       statusEl.className = 'db-status loaded';
       statusText.textContent = ALUNOS.length + ' alunos carregados ✓';
     } catch (err) {
+      ALUNOS = [];
       statusEl.className = 'db-status error';
       statusText.textContent = 'Erro ao carregar planilha — preencha manualmente';
+      console.warn('Planilha indisponível:', err);
     }
   }
 
