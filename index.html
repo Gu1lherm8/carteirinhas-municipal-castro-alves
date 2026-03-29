@@ -1001,25 +1001,22 @@
       }
     }
 
-    async function adicionarNaFila() {
+    function adicionarNaFila() {
       const fila = document.getElementById('pagina-resultado');
       if (!fila) return;
 
-      const fotoPreview = document.getElementById('photo-preview');
-      const fotoSrc = fotoPreview.src;
-      const fotoVis = fotoPreview.style.display;
-      const logoOriginal = document.getElementById('img-logo');
-      const logoUrl = logoOriginal ? logoOriginal.src : window.location.origin + '/logo.png';
+      const logoImg = document.getElementById('img-logo');
+      const logoUrl = logoImg ? logoImg.src : '';
 
-      let qrDataUrl = '';
-      const qrBox = document.getElementById('qr-code-card');
-      const qrCanvas = qrBox.querySelector('canvas');
-      const qrImg = qrBox.querySelector('img');
-      if (qrCanvas) qrDataUrl = qrCanvas.toDataURL();
-      else if (qrImg) qrDataUrl = qrImg.src;
+      const qrCanvas = document.querySelector('#qrcode canvas');
+      const qrDataUrl = qrCanvas ? qrCanvas.toDataURL('image/png') : '';
+
+      const fotoPreview = document.getElementById('foto-preview');
+      const fotoSrc = fotoPreview ? fotoPreview.src : '';
+      const fotoVis = (fotoPreview && fotoSrc && fotoPreview.style.display !== 'none') ? 'block' : 'none';
 
       const card = document.createElement('div');
-      card.className = 'carteirinha-fila';
+      card.className = 'carteirinha';
 
       const d = {
         nome: document.getElementById('inp-nome').value.toUpperCase(),
@@ -1034,8 +1031,7 @@
           <div class="school-logo-wrap">
             <div class="school-logo"><img src="${logoUrl}" crossorigin="anonymous"></div>
             <div class="school-name">
-              <div class="line1">ESTADO DO RIO DE JANEIRO</div>
-              <div class="line2">E.M. Castro Alves</div>
+              <div class="line2" style="font-size:8px;">E.M. Castro Alves</div>
             </div>
           </div>
         </div>
@@ -1044,25 +1040,25 @@
             <div class="photo-circle">${fotoVis !== 'none' ? `<img src="${fotoSrc}">` : ''}</div>
             <div class="qr-container-small" style="text-align:center;">
               <div class="qr-img-box">${qrDataUrl ? `<img src="${qrDataUrl}" style="width:50px;">` : ''}</div>
-              <div style="font-size:5px; color:#C84B1F; font-weight:700;">CONTATO DO RESPONS&Aacute;VEL</div>
+              <div style="font-size:5.5px; color:#C84B1F; font-weight:700;">CONTATO DO RESPONSÁVEL</div>
             </div>
           </div>
           <div class="card-right">
-            <div class="card-title" style="font-size:7px; margin-bottom:5px;">IDENTIFICAÃ‡ÃƒO TRANSPORTE</div>
-            <div class="data-grid" style="gap:4px;">
-              <div class="data-item item-nome"><div class="data-label" style="font-size:5px;">NOME</div><div class="data-value" style="font-size:8px;">${d.nome}</div></div>
-              <div class="data-item"><div class="data-label" style="font-size:5px;">MATRÃCULA</div><div class="data-value" style="font-size:7px;">${d.mat}</div></div>
-              <div class="data-item"><div class="data-label" style="font-size:5px;">D.N.</div><div class="data-value" style="font-size:7px;">${d.dn}</div></div>
-              <div class="data-item"><div class="data-label" style="font-size:5px;">ENDEREÃ‡O</div><div class="data-value" style="font-size:7px;">${d.end}</div></div>
-              <div class="data-item"><div class="data-label" style="font-size:5px;">LINHA</div><div class="data-value" style="font-size:7px;">${d.linha}</div></div>
+            <div class="card-title" style="font-size:8px; margin-bottom:6px;">IDENTIFICAÇÃO TRANSPORTE</div>
+            <div class="data-grid" style="gap:5px;">
+              <div class="data-item item-nome"><div class="data-label" style="font-size:6.5px;">NOME</div><div class="data-value" style="font-size:10.5px;">${d.nome}</div></div>
+              <div class="data-item"><div class="data-label" style="font-size:6.5px;">MATRÍCULA</div><div class="data-value" style="font-size:9.5px;">${d.mat}</div></div>
+              <div class="data-item"><div class="data-label" style="font-size:6.5px;">D.N.</div><div class="data-value" style="font-size:9.5px;">${d.dn}</div></div>
+              <div class="data-item"><div class="data-label" style="font-size:6.5px;">ENDEREÇO</div><div class="data-value" style="font-size:9.5px;">${d.end}</div></div>
+              <div class="data-item"><div class="data-label" style="font-size:6.5px;">LINHA</div><div class="data-value" style="font-size:9.5px;">${d.linha}</div></div>
             </div>
           </div>
         </div>
         <div class="card-footer-box">
-          <div class="auth-bar" style="font-size:6px; padding:4px;">AutorizaÃ§Ã£o para quem utiliza transporte escolar</div>
-          <div class="bottom-stripe" style="height:6px;"></div>
+          <div class="auth-bar" style="font-size:6.5px; padding:4px;">Autorização para quem utiliza transporte escolar</div>
+          <div class="bottom-stripe" style="height:6.5px;"></div>
         </div>
-        <div class="card-watermark" style="font-size:4px; bottom:6px; right:6px;">Escola Municipal Castro Alves</div>
+        <div class="card-watermark" style="font-size:4.5px; bottom:6px; right:6px;">Escola Municipal Castro Alves</div>
       `;
 
       fila.appendChild(card);
