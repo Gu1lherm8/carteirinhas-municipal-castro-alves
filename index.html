@@ -962,43 +962,41 @@
     ];
 
     function atualizar() {
-      const grid = document.getElementById('data-display');
-      async function adicionarNaFila() {
-        const imgPreview = document.getElementById('photo-preview');
-        const fotoSrc = imgPreview.src;
-        const fotoVis = imgPreview.style.display;
+      // Função original de atualização do preview (se houver lógica nela, mantenha aqui)
+      // No seu caso remoto, atualizar() costuma disparar a renderização do verso/frente
+    }
 
-        // Capturar o logotipo e garantir URL ABSOLUTA para o contexto de impressão
-        const logoOriginal = document.getElementById('img-logo');
-        let logoAbsoluto = "";
-        if (logoOriginal && logoOriginal.getAttribute('src')) {
-          // Converte caminho relativo (ex: ./logo.png) em absoluto (ex: https://.../logo.png)
-          logoAbsoluto = new URL(logoOriginal.getAttribute('src'), window.location.href).href;
-        }
+    async function adicionarNaFila() {
+      const imgPreview = document.getElementById('photo-preview');
+      const fotoSrc = imgPreview.src;
+      const fotoVis = imgPreview.style.display;
 
-        // Garantir que a imagem do preview esteja carregada antes de clonar
-        if (fotoVis !== 'none' && fotoSrc && !imgPreview.complete) {
-          await new Promise(resolve => {
-            imgPreview.onload = resolve;
-            imgPreview.onerror = resolve;
-          });
-        }
+      // Capturar o logotipo e garantir URL ABSOLUTA (Zero Dano)
+      // A propriedade .src do navegador SEMPRE retorna a URL completa/absoluta
+      const imgLogo = document.getElementById('img-logo');
+      const logoAbsoluto = imgLogo ? imgLogo.src : "";
 
-        const tel = document.getElementById('inp-tel').value.replace(/\D/g, '');
+      // Garantir que a imagem do preview esteja carregada antes de clonar
+      if (fotoVis !== 'none' && fotoSrc && !imgPreview.complete) {
+        await new Promise(resolve => {
+          imgPreview.onload = resolve;
+          imgPreview.onerror = resolve;
+        });
+      }
 
-        // Capturar QR como base64 (já é absoluto por natureza)
-        let qrDataUrl = '';
-        const qrBox = document.getElementById('qr-code-card');
-        const qrCanvas = qrBox.querySelector('canvas');
-        const qrImg = qrBox.querySelector('img');
-        if (qrCanvas) qrDataUrl = qrCanvas.toDataURL();
-        else if (qrImg && qrImg.src) qrDataUrl = qrImg.src;
+      // Capturar QR como base64 (já é absoluto)
+      let qrDataUrl = '';
+      const qrBox = document.getElementById('qr-code-card');
+      const qrCanvas = qrBox.querySelector('canvas');
+      const qrImg = qrBox.querySelector('img');
+      if (qrCanvas) qrDataUrl = qrCanvas.toDataURL();
+      else if (qrImg && qrImg.src) qrDataUrl = qrImg.src;
 
-        const item = document.createElement('div');
-        item.className = 'carteirinha-fila';
+      const item = document.createElement('div');
+      item.className = 'carteirinha-fila';
 
-        // Template Injetado com URLs Absolutas
-        item.innerHTML = `
+      // Template Injetado com IDs CORRETOS (inp-matricula, inp-dn, inp-endereco)
+      item.innerHTML = `
       <div class="card-header">
         <div class="school-logo-wrap">
           <div class="school-logo"><img src="${logoAbsoluto}" crossorigin="anonymous"></div>
@@ -1027,18 +1025,18 @@
           <div class="field-row">
             <div class="field">
               <span class="label">MATRÍCULA</span>
-              <span class="value">${document.getElementById('inp-mat').value}</span>
+              <span class="value">${document.getElementById('inp-matricula').value}</span>
             </div>
           </div>
           <div class="field-row">
             <div class="field">
               <span class="label">D.N.</span>
-              <span class="value">${document.getElementById('inp-nasc').value}</span>
+              <span class="value">${document.getElementById('inp-dn').value}</span>
             </div>
           </div>
           <div class="field">
             <span class="label">ENDEREÇO</span>
-            <span class="value address-value">${document.getElementById('inp-end').value}</span>
+            <span class="value address-value">${document.getElementById('inp-endereco').value}</span>
           </div>
           <div class="field">
             <span class="label">LINHA</span>
@@ -1052,32 +1050,35 @@
       </div>
       `;
 
-        document.getElementById('print-queue').appendChild(item);
+      document.getElementById('print-queue').appendChild(item);
+      atualizarContagem();
 
-        // Aguarda o navegador processar as imagens no novo elemento
-        const imgsToLoad = Array.from(item.querySelectorAll('img'));
-        await Promise.all(imgsToLoad.map(img => {
-          if (img.complete) return Promise.resolve();
-          return new Promise(resolve => {
-            img.onload = resolve;
-            img.onerror = resolve;
-          });
-        }));
-      }
+      // Aguarda o navegador processar as imagens no novo elemento
+      const imgsToLoad = Array.from(item.querySelectorAll('img'));
+      await Promise.all(imgsToLoad.map(img => {
+        if (img.complete) return Promise.resolve();
+        return new Promise(resolve => {
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      }));
+    }
 
+    function limparFila() {
+      document.getElementById('print-queue').innerHTML = '';
+      atualizarContagem();
+    }
 
-      function limparFila() {
-        document.getElementById('pagina-resultado').innerHTML = '';
-        atualizarContagem();
-      }
-
-      function atualizarContagem() {
-        const total = document.getElementById('pagina-resultado').children.length;
-        const el = document.getElementById('fila-contagem');
+    function atualizarContagem() {
+      const total = document.getElementById('print-queue').children.length;
+      const el = document.getElementById('fila-contagem');
+      if (el) {
         el.textContent = total === 0
           ? 'Nenhuma carteirinha adicionada ainda.'
           : `${total} carteirinha(s) · ~${Math.ceil(total / 2)} folha(s) A4`;
       }
+    }
+
 
       window.onload = carregarDados;
       atualizar();
