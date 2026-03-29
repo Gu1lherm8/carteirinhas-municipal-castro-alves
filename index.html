@@ -923,11 +923,11 @@
           ALUNOS.push({ nome: c[0], mat: c[1] || '', dn: c[2] || '', tel: c[5] || '', end: c[6] || '', linha: c[7] || '' });
           const o = document.createElement('option');
           o.value = ALUNOS.length - 1;
-          o.textContent = c[0] + (c[7] ? ' â€“ ' + c[7] : '');
+          o.textContent = c[0] + (c[7] ? ' - ' + c[7] : '');
           sel.appendChild(o);
         }
         st.className = 'db-status loaded';
-        stText.textContent = ALUNOS.length + ' alunos carregados âœ“';
+        stText.textContent = ALUNOS.length + ' alunos carregados \u2713';
       } catch (e) {
         clearTimeout(tId);
         st.className = 'db-status error';
