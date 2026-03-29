@@ -128,7 +128,7 @@
       align-items: start;
     }
 
-    /* FORMULÁRIO */
+    /* FORMULÃRIO */
     .form-panel {
       background: rgba(80, 35, 10, 0.5);
       border: 1px solid rgba(180, 100, 40, 0.3);
@@ -278,7 +278,7 @@
       margin-bottom: 6px;
     }
 
-    /* PRÉVIA 680px */
+    /* PRÃ‰VIA 680px */
     #carteirinha {
       width: 680px;
       height: 440px;
@@ -464,7 +464,7 @@
       min-height: 20px;
     }
 
-    /* DESTAQUE DO NOME NA PRÉVIA */
+    /* DESTAQUE DO NOME NA PRÃ‰VIA */
     .data-item.item-nome .data-value {
       font-size: 1.1rem;
       font-weight: 900;
@@ -510,7 +510,7 @@
       font-weight: 700;
     }
 
-    /* FILA DE IMPRESSÃO — 10cm x 7cm */
+    /* FILA DE IMPRESSÃƒO â€” 10cm x 7cm */
     .fila-titulo {
       width: 100%;
       text-align: center;
@@ -599,7 +599,7 @@
       border-width: 2px;
     }
 
-    /* QR gerado em 90px e escalado — muito mais nítido na impressão */
+    /* QR gerado em 90px e escalado â€” muito mais nÃ­tido na impressÃ£o */
     .carteirinha-fila .qr-area>div:first-child {
       width: 1.5cm;
       height: 1.5cm;
@@ -649,7 +649,7 @@
       font-weight: 500;
     }
 
-    /* DESTAQUE DO NOME NA FILA — maior, negrito, mais escuro */
+    /* DESTAQUE DO NOME NA FILA â€” maior, negrito, mais escuro */
     .carteirinha-fila .data-item.item-nome .data-label {
       font-size: 6.5px;
       color: #C84B1F;
@@ -698,7 +698,7 @@
       }
     }
 
-    /* IMPRESSÃO — melhorias de qualidade */
+    /* IMPRESSÃƒO â€” melhorias de qualidade */
     @media print {
       @page {
         size: A4 portrait;
@@ -753,7 +753,7 @@
         margin: 0 !important;
       }
 
-      /* Garantir cores na impressão */
+      /* Garantir cores na impressÃ£o */
       .carteirinha-fila .card-header {
         background: #5C2308 !important;
       }
@@ -858,7 +858,7 @@
             <div class="photo-circle"><img id="photo-preview" src="" style="display:none"></div>
             <div class="qr-area">
               <div id="qr-code-card"></div>
-              <div class="qr-label">Contato</div>
+              <div class="qr-label">Contato do Respons&aacute;vel</div>
             </div>
           </div>
           <div class="card-right">
@@ -877,10 +877,7 @@
       <div class="fila-titulo">&#128424; Folha de Impress&atilde;o</div>
       <div class="fila-contagem" id="fila-contagem">Nenhuma carteirinha adicionada ainda.</div>
       <div id="pagina-resultado" class="pagina-impressao"></div>
-    </div>
-  </div>
-
-  <script>
+    <  <script>
     // AUTH
     try { if (localStorage.getItem('castroalves_auth') !== 'ok') window.location.href = 'login.html'; } catch (e) { }
     function fazerLogout() { localStorage.removeItem('castroalves_auth'); window.location.href = 'login.html'; }
@@ -889,7 +886,6 @@
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1_0Nr7rt1RClLouJ_g4saqU7JluswzIWf/gviz/tq?tqx=out:csv&sheet=Base%20de%20dados';
     let ALUNOS = [];
 
-    // Parser CSV robusto — respeita vírgulas dentro de campos com aspas
     function parseCSVLine(line) {
       const result = [];
       let cur = '', inQuotes = false;
@@ -909,7 +905,6 @@
     async function carregarDados() {
       const st = document.getElementById('db-status');
       const stText = document.getElementById('db-status-text');
-      // AbortController: cancela após 10s — nunca trava
       const controller = new AbortController();
       const tId = setTimeout(() => controller.abort(), 10000);
       try {
@@ -919,7 +914,7 @@
         const text = await resp.text();
         const lines = text.trim().split('\n');
         const sel = document.getElementById('sel-aluno');
-        sel.innerHTML = '<option value="">&#8212; Selecione ou preencha manualmente &#8212;</option>';
+        sel.innerHTML = '<option value="">&#8212; Selecione um aluno &#8212;</option>';
         ALUNOS = [];
         for (let i = 1; i < lines.length; i++) {
           if (!lines[i].trim()) continue;
@@ -928,16 +923,15 @@
           ALUNOS.push({ nome: c[0], mat: c[1] || '', dn: c[2] || '', tel: c[5] || '', end: c[6] || '', linha: c[7] || '' });
           const o = document.createElement('option');
           o.value = ALUNOS.length - 1;
-          o.textContent = c[0] + (c[7] ? ' – ' + c[7] : '');
+          o.textContent = c[0] + (c[7] ? ' â€“ ' + c[7] : '');
           sel.appendChild(o);
         }
         st.className = 'db-status loaded';
-        stText.textContent = ALUNOS.length + ' alunos carregados ✓';
+        stText.textContent = ALUNOS.length + ' alunos carregados âœ“';
       } catch (e) {
         clearTimeout(tId);
-        ALUNOS = [];
         st.className = 'db-status error';
-        stText.textContent = e.name === 'AbortError' ? 'Tempo esgotado — preencha manualmente' : 'Erro ao carregar — preencha manualmente';
+        stText.textContent = 'Erro ao carregar dados da planilha.';
       }
     }
 
@@ -945,18 +939,18 @@
       const a = ALUNOS[this.value];
       if (!a) return;
       document.getElementById('inp-nome').value = a.nome;
-      document.getElementById('inp-matricula').value = a.mat;
-      document.getElementById('inp-dn').value = a.dn;
-      document.getElementById('inp-endereco').value = a.end;
-      document.getElementById('inp-linha').value = a.linha;
-      document.getElementById('inp-tel').value = a.tel;
+      document.getElementById('inp-matricula').value = a.mat || '';
+      document.getElementById('inp-dn').value = a.dn || '';
+      document.getElementById('inp-endereco').value = a.end || '';
+      document.getElementById('inp-linha').value = a.linha || '';
+      document.getElementById('inp-tel').value = a.tel || '';
       atualizar(); atualizarQR();
     };
 
     const CAMPOS = [
-      { id: 'inp-nome', label: 'NOME', classe: 'item-nome' },
+      { id: 'inp-nome', label: 'NOME COMPLETO', classe: 'item-nome' },
       { id: 'inp-matricula', label: 'MATR\u00cdCULA', classe: '' },
-      { id: 'inp-dn', label: 'D.N', classe: '' },
+      { id: 'inp-dn', label: 'DATA NASC.', classe: '' },
       { id: 'inp-endereco', label: 'ENDERE\u00c7O', classe: '' },
       { id: 'inp-linha', label: 'LINHA', classe: '' },
     ];
@@ -968,7 +962,7 @@
       CAMPOS.forEach(c => {
         const val = document.getElementById(c.id).value || '';
         const item = document.createElement('div');
-        item.className = 'field ' + c.classe;
+        item.className = 'data-item ' + c.classe;
         item.innerHTML = `
           <div class="data-label">${c.label}</div>
           <div class="data-value">${c.id === 'inp-nome' ? val.toUpperCase() : val}</div>
@@ -976,9 +970,8 @@
         display.appendChild(item);
       });
 
-      // Ativar botão adicionar
       const btn = document.getElementById('btn-adicionar');
-      btn.disabled = !document.getElementById('inp-nome').value.trim();
+      if (btn) btn.disabled = !document.getElementById('inp-nome').value.trim();
     }
 
     function atualizarQR() {
@@ -989,10 +982,8 @@
       if (tel) {
         new QRCode(qrBox, {
           text: `https://wa.me/55${tel}`,
-          width: 80,
-          height: 80,
-          colorDark: "#C84B1F",
-          colorLight: "#ffffff",
+          width: 80, height: 80,
+          colorDark: "#C84B1F", colorLight: "#ffffff",
           correctLevel: QRCode.CorrectLevel.H
         });
       }
@@ -1011,106 +1002,78 @@
     }
 
     async function adicionarNaFila() {
-      const imgPreview = document.getElementById('photo-preview');
-      const fotoSrc = imgPreview.src;
-      const fotoVis = imgPreview.style.display;
+      const fila = document.getElementById('pagina-resultado');
+      if (!fila) return;
 
-      // Capturar o logotipo e garantir URL ABSOLUTA (Zero Dano)
-      // A propriedade .src do navegador SEMPRE retorna a URL completa/absoluta
-      const imgLogo = document.getElementById('img-logo');
-      const logoAbsoluto = imgLogo ? imgLogo.src : "";
+      const fotoPreview = document.getElementById('photo-preview');
+      const fotoSrc = fotoPreview.src;
+      const fotoVis = fotoPreview.style.display;
+      const logoOriginal = document.getElementById('img-logo');
+      const logoUrl = logoOriginal ? logoOriginal.src : window.location.origin + '/logo.png';
 
-      // Garantir que a imagem do preview esteja carregada antes de clonar
-      if (fotoVis !== 'none' && fotoSrc && !imgPreview.complete) {
-        await new Promise(resolve => {
-          imgPreview.onload = resolve;
-          imgPreview.onerror = resolve;
-        });
-      }
-
-      // Capturar QR como base64 (já é absoluto)
       let qrDataUrl = '';
       const qrBox = document.getElementById('qr-code-card');
       const qrCanvas = qrBox.querySelector('canvas');
       const qrImg = qrBox.querySelector('img');
       if (qrCanvas) qrDataUrl = qrCanvas.toDataURL();
-      else if (qrImg && qrImg.src) qrDataUrl = qrImg.src;
+      else if (qrImg) qrDataUrl = qrImg.src;
 
-      const item = document.createElement('div');
-      item.className = 'carteirinha-fila';
+      const card = document.createElement('div');
+      card.className = 'carteirinha-fila';
 
-      // Template Injetado com IDs CORRETOS (inp-matricula, inp-dn, inp-endereco)
-      item.innerHTML = `
-      <div class="card-header">
-        <div class="school-logo-wrap">
-          <div class="school-logo"><img src="${logoAbsoluto}" crossorigin="anonymous"></div>
-          <div class="school-name">
-            <span class="sub">Escola Municipal</span>
-            <strong>Castro Alves</strong>
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="photo-area">
-          <div class="photo-circle">
-            ${fotoVis !== 'none' ? `<img src="${fotoSrc}">` : ''}
-          </div>
-          <div class="qr-code">
-            ${qrDataUrl ? `<img src="${qrDataUrl}">` : ''}
-            <span class="qr-label">Contato</span>
-          </div>
-        </div>
-        <div class="info-area">
-          <div class="type-label">IDENTIFICAÇÃO TRANSPORTE</div>
-          <div class="field">
-            <span class="label">NOME</span>
-            <span class="value">${document.getElementById('inp-nome').value.toUpperCase()}</span>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <span class="label">MATRÍCULA</span>
-              <span class="value">${document.getElementById('inp-matricula').value}</span>
+      const d = {
+        nome: document.getElementById('inp-nome').value.toUpperCase(),
+        mat: document.getElementById('inp-matricula').value || '-',
+        dn: document.getElementById('inp-dn').value || '-',
+        end: document.getElementById('inp-endereco').value || '-',
+        linha: document.getElementById('inp-linha').value || '-'
+      };
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="school-logo-wrap">
+            <div class="school-logo"><img src="${logoUrl}" crossorigin="anonymous"></div>
+            <div class="school-name">
+              <div class="line1">ESTADO DO RIO DE JANEIRO</div>
+              <div class="line2">E.M. Castro Alves</div>
             </div>
           </div>
-          <div class="field-row">
-            <div class="field">
-              <span class="label">D.N.</span>
-              <span class="value">${document.getElementById('inp-dn').value}</span>
+        </div>
+        <div class="card-body">
+          <div class="card-left">
+            <div class="photo-circle">${fotoVis !== 'none' ? `<img src="${fotoSrc}">` : ''}</div>
+            <div class="qr-container-small" style="text-align:center;">
+              <div class="qr-img-box">${qrDataUrl ? `<img src="${qrDataUrl}" style="width:50px;">` : ''}</div>
+              <div style="font-size:5px; color:#C84B1F; font-weight:700;">CONTATO DO RESPONS&Aacute;VEL</div>
             </div>
           </div>
-          <div class="field">
-            <span class="label">ENDEREÇO</span>
-            <span class="value address-value">${document.getElementById('inp-endereco').value}</span>
-          </div>
-          <div class="field">
-            <span class="label">LINHA</span>
-            <span class="value">${document.getElementById('inp-linha').value}</span>
+          <div class="card-right">
+            <div class="card-title" style="font-size:7px; margin-bottom:5px;">IDENTIFICAÃ‡ÃƒO TRANSPORTE</div>
+            <div class="data-grid" style="gap:4px;">
+              <div class="data-item item-nome"><div class="data-label" style="font-size:5px;">NOME</div><div class="data-value" style="font-size:8px;">${d.nome}</div></div>
+              <div class="data-item"><div class="data-label" style="font-size:5px;">MATRÃCULA</div><div class="data-value" style="font-size:7px;">${d.mat}</div></div>
+              <div class="data-item"><div class="data-label" style="font-size:5px;">D.N.</div><div class="data-value" style="font-size:7px;">${d.dn}</div></div>
+              <div class="data-item"><div class="data-label" style="font-size:5px;">ENDEREÃ‡O</div><div class="data-value" style="font-size:7px;">${d.end}</div></div>
+              <div class="data-item"><div class="data-label" style="font-size:5px;">LINHA</div><div class="data-value" style="font-size:7px;">${d.linha}</div></div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="card-footer">
-        Autorização para as crianças e/ou estudantes que utilizam transporte escolar
-        <div class="footer-logo">Castro Alves</div>
-      </div>
+        <div class="card-footer-box">
+          <div class="auth-bar" style="font-size:6px; padding:4px;">AutorizaÃ§Ã£o para quem utiliza transporte escolar</div>
+          <div class="bottom-stripe" style="height:6px;"></div>
+        </div>
+        <div class="card-watermark" style="font-size:4px; bottom:6px; right:6px;">Escola Municipal Castro Alves</div>
       `;
 
-      document.getElementById('pagina-resultado').appendChild(item);
+      fila.appendChild(card);
       atualizarContagem();
-
-      // Aguarda o navegador processar as imagens no novo elemento
-      const imgsToLoad = Array.from(item.querySelectorAll('img'));
-      await Promise.all(imgsToLoad.map(img => {
-        if (img.complete) return Promise.resolve();
-        return new Promise(resolve => {
-          img.onload = resolve;
-          img.onerror = resolve;
-        });
-      }));
     }
 
     function limparFila() {
-      document.getElementById('pagina-resultado').innerHTML = '';
-      atualizarContagem();
+      if (confirm('Deseja limpar toda a folha de impressÃ£o?')) {
+        document.getElementById('pagina-resultado').innerHTML = '';
+        atualizarContagem();
+      }
     }
 
     function atualizarContagem() {
@@ -1118,16 +1081,12 @@
       const total = parent ? parent.children.length : 0;
       const el = document.getElementById('fila-contagem');
       if (el) {
-        el.textContent = total === 0
-          ? 'Nenhuma carteirinha adicionada ainda.'
-          : `${total} carteirinha(s) · ~${Math.ceil(total / 2)} folha(s) A4`;
+        el.textContent = total === 0 ? 'Nenhuma carteirinha adicionada ainda.' : `${total} carteirinha(s) na folha.`;
       }
     }
 
-
-      window.onload = carregarDados;
-      atualizar();
+    window.onload = carregarDados;
+    atualizar();
   </script>
 </body>
-
 </html>
