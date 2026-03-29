@@ -40,7 +40,7 @@
     .nav-btn.active { background: #e8763a; color: #fff; }
     .nav-btn:hover:not(.active) { color: #f5c87a; }
 
-    /* HEADER — ORIGINAL INTOCADO */
+    /* HEADER */
     .page-header { text-align: center; margin-bottom: 2.5rem; }
     .page-header h1 {
       font-size: 2rem; font-weight: 900;
@@ -60,10 +60,9 @@
       font-size: 0.82rem; font-weight: 600;
       padding: 0.4rem 0.9rem;
       cursor: pointer;
-      transition: background 0.2s;
       display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 1rem;
     }
-    .btn-logout:hover { background: rgba(200,75,31,0.35); }
 
     .db-status {
       display: inline-flex; align-items: center; gap: 6px;
@@ -74,34 +73,24 @@
       font-size: 0.78rem; color: #a07050;
       margin-top: 0.5rem;
     }
-    .db-status .dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: #888; flex-shrink: 0;
-      transition: background 0.3s;
-    }
+    .db-status .dot { width: 7px; height: 7px; border-radius: 50%; background: #888; flex-shrink: 0; }
     .db-status.loaded .dot { background: #6db87a; }
     .db-status.loading .dot { background: #f5c87a; animation: pulse 0.8s infinite; }
-    .db-status.error .dot { background: #e05555; }
     @keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:0.3; } }
 
-    /* LAYOUT — ORIGINAL INTOCADO */
+    /* LAYOUT */
     .main-layout {
       width: 100%; max-width: 1100px;
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 2rem;
-      align-items: start;
+      display: grid; grid-template-columns: 340px 1fr;
+      gap: 2rem; align-items: start;
     }
 
-    /* FORMULÁRIO — ORIGINAL INTOCADO */
+    /* FORMULÁRIO */
     .form-panel {
       background: rgba(80, 35, 10, 0.5);
       border: 1px solid rgba(180, 100, 40, 0.3);
-      border-radius: 16px;
-      padding: 1.5rem;
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 1rem;
+      border-radius: 16px; padding: 1.5rem;
+      backdrop-filter: blur(10px); position: sticky; top: 1rem;
     }
     .form-panel h2 {
       font-size: 1.1rem; font-weight: 700; color: #f5c87a;
@@ -114,298 +103,148 @@
       color: #c89060; margin-bottom: 0.3rem;
       text-transform: uppercase; letter-spacing: 0.05em;
     }
-    .form-group select,
-    .form-group input {
-      width: 100%;
-      background: rgba(20, 10, 5, 0.7);
+    .form-group input, .form-group select {
+      width: 100%; background: rgba(20, 10, 5, 0.7);
       border: 1px solid rgba(180, 100, 40, 0.4);
       border-radius: 8px; color: #fff;
       font-family: inherit; font-size: 0.92rem;
-      padding: 0.6rem 0.8rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
+      padding: 0.6rem 0.8rem; outline: none;
     }
-    .form-group select:focus,
-    .form-group input:focus {
-      border-color: #e8763a;
-      box-shadow: 0 0 0 3px rgba(232, 118, 58, 0.2);
-    }
-    .form-group select option { background: #2a1205; }
+    .form-group input:focus { border-color: #e8763a; }
 
     .photo-upload-area {
-      width: 100%; height: 90px;
+      width: 100%; height: 80px;
       border: 2px dashed rgba(180, 100, 40, 0.5);
-      border-radius: 8px;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s; gap: 0.3rem;
-    }
-    .photo-upload-area:hover { border-color: #e8763a; background: rgba(232,118,58,0.05); }
-    .photo-upload-area span { font-size: 0.8rem; color: #a07050; }
-    #photo-input { display: none; }
-
-    /* BOTÕES DE AÇÃO */
-    .btn-actions { display: flex; gap: 0.6rem; margin-top: 1.2rem; flex-direction: column; }
-
-    .btn-add {
-      width: 100%; padding: 0.85rem;
-      background: #a04018;
-      border: none; border-radius: 10px; color: white;
-      font-family: inherit; font-size: 1rem; font-weight: 700;
-      cursor: pointer; display: flex; align-items: center;
-      justify-content: center; gap: 0.5rem;
-      transition: filter 0.2s;
-    }
-    .btn-add:hover { filter: brightness(1.15); }
-    .btn-add:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
-
-    .btn-download {
-      width: 100%; padding: 0.85rem;
-      background: linear-gradient(135deg, #c84b1f, #e8763a);
-      border: none; border-radius: 10px; color: white;
-      font-family: inherit; font-size: 1rem; font-weight: 700;
-      cursor: pointer; display: flex; align-items: center;
-      justify-content: center; gap: 0.5rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 15px rgba(200, 75, 31, 0.4);
-    }
-    .btn-download:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(200,75,31,0.6); }
-    .btn-download:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-    .btn-limpar {
-      width: 100%; padding: 0.7rem;
-      background: rgba(200,30,30,0.35);
-      border: 1px solid rgba(220,60,60,0.4);
-      border-radius: 10px; color: #ffaaaa;
-      font-family: inherit; font-size: 0.9rem; font-weight: 700;
-      cursor: pointer; display: flex; align-items: center;
-      justify-content: center; gap: 0.5rem;
-      transition: background 0.2s;
-    }
-    .btn-limpar:hover { background: rgba(200,30,30,0.55); }
-
-    /* CARD PANEL */
-    .card-panel { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-
-    .preview-label {
-      text-align: center; font-size: 0.78rem; color: #a07050;
-      margin-bottom: 6px; letter-spacing: 0.04em;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 0.8rem; color: #a07050;
     }
 
-    /* ================================================================
-       PRÉVIA — design original 680px, INTOCADO
-       ================================================================ */
+    .btn-actions { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1.2rem; }
+    .btn-add { background: #a04018; border: none; border-radius: 10px; color: #fff; padding: 0.85rem; font-weight: 700; cursor: pointer; }
+    .btn-add:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-download { background: linear-gradient(135deg, #c84b1f, #e8763a); border: none; border-radius: 10px; color: #fff; padding: 0.85rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(200, 75, 31, 0.4); }
+    .btn-limpar { background: rgba(200,30,30,0.3); border: 1px solid rgba(220,60,60,0.4); border-radius: 10px; color: #ffaaaa; padding: 0.7rem; cursor: pointer; }
+
+    /* CARD PREVIEW ORIGINAL */
     #carteirinha {
-      width: 680px;
-      background: #ffffff;
-      border-radius: 10px;
-      overflow: hidden;
+      width: 680px; background: #fff; border-radius: 10px; overflow: hidden;
       box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-      font-family: 'Outfit', sans-serif;
     }
-
-    /* Cabeçalho marrom geométrico — LOGO À DIREITA */
-    .card-header {
-      position: relative; height: 100px;
-      background: #5C2308; overflow: hidden;
-      display: flex; align-items: center;
-      justify-content: flex-end; padding-left: 20px;
-    }
+    .card-header { position: relative; height: 100px; display: flex; align-items: center; justify-content: flex-end; padding-right: 20px; background: #5C2308; }
     .card-header.header-escolar { background: #5C2308; }
-    .card-header.header-saida { background: #1e3a8a; }
-
-    .card-header::before {
-      content: ''; position: absolute; inset: 0;
-      background:
-        linear-gradient(125deg, #7B3A18 0%, #7B3A18 30%, transparent 30%),
-        linear-gradient(200deg, #9B4E20 0%, #9B4E20 20%, transparent 20%),
-        linear-gradient(80deg,  #3D1608 45%, transparent 45%),
-        linear-gradient(160deg, #6B3015 55%, transparent 55%),
-        linear-gradient(45deg,  #AA5528 70%, transparent 70%),
-        linear-gradient(260deg, #441A06 65%, transparent 65%);
-    }
-    .card-header::after {
-      content: ''; position: absolute; bottom: 0; left: 0;
-      width: 100%; height: 100%;
-      background:
-        linear-gradient(330deg, #8B4020 40%, transparent 40%),
-        linear-gradient(15deg,  #C07030 60%, transparent 60%),
-        linear-gradient(285deg, #4A2010 50%, transparent 50%);
-    }
-    .school-logo-wrap {
-      position: relative; z-index: 2;
-      display: flex; align-items: center; gap: 12px;
-      flex-direction: row-reverse;
-      padding-right: 20px;
-    }
-    .school-logo {
-      width: 64px; height: 64px; border-radius: 50%;
-      border: 3px solid #F5C030; background: #fff;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; overflow: hidden;
-    }
-    .school-logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-    .school-name { color: #fff; line-height: 1.2; text-align: right; }
-    .school-name .line1 { font-size: 0.78rem; font-weight: 400; opacity: 0.85; }
+    .card-header.header-saida { background: #1e3a8a !important; }
+    .card-header.header-saida::before, 
+    .card-header.header-saida::after { display: none !important; }
+    
+    .school-logo-wrap { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; flex-direction: row-reverse; }
+    .school-logo { width: 64px; height: 64px; border-radius: 50%; border: 3px solid #F5C030; background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .school-logo img { width: 100%; height: 100%; object-fit: cover; }
+    .school-name { color: #fff; text-align: right; line-height: 1.2; }
+    .school-name .line1 { font-size: 0.78rem; opacity: 0.85; }
     .school-name .line2 { font-size: 1.15rem; font-weight: 900; }
 
     .card-body { display: flex; min-height: 260px; background: #f8f4ef; }
-    .card-left {
-      width: 210px; flex-shrink: 0;
-      display: flex; flex-direction: column;
-      align-items: center; padding: 18px 12px 14px; gap: 10px;
-      background: #fff; border-right: 1px solid #e8ddd0;
-    }
-    .photo-circle {
-      width: 145px; height: 145px; border-radius: 50%;
-      border: 3px solid #C07030; overflow: hidden;
-      background: linear-gradient(180deg, #87CEEB 0%, #B8D8F0 40%, #A8D45A 65%, #5A8A20 100%);
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
+    .card-left { width: 210px; display: flex; flex-direction: column; align-items: center; padding: 18px 12px; gap: 10px; background: #fff; border-right: 1px solid #e8ddd0; flex-shrink: 0; }
+    .photo-circle { width: 145px; height: 145px; border-radius: 50%; border: 3px solid #C07030; overflow: hidden; background: #eee; flex-shrink: 0; }
     .photo-circle img { width: 100%; height: 100%; object-fit: cover; }
     .qr-area { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    #qr-code-card { width: 80px; height: 80px; flex-shrink: 0; }
+    #qr-code-card { width: 80px; height: 80px; flex-shrink: 0; background: #fff; padding: 4px; box-sizing: content-box; }
     #qr-code-card canvas, #qr-code-card img { width: 80px !important; height: 80px !important; }
-    .qr-label { font-size: 0.68rem; font-weight: 700; color: #C84B1F; font-style: italic; text-align: center; }
+    .qr-label { font-size: 0.68rem; font-weight: 700; color: #C84B1F; font-style: italic; }
 
-    .card-right {
-      flex: 1; padding: 18px 20px 14px;
-      display: flex; flex-direction: column; justify-content: space-between;
-    }
-    .card-title {
-      font-size: 0.85rem; font-weight: 900; color: #C84B1F;
-      text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.25; margin-bottom: 14px;
-    }
-    .data-grid { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; align-items: flex-start; flex: 1; }
-
-    /* FIX OPACIDADE: cores sólidas, garantidas */
-    .data-label { font-size: 0.78rem; font-weight: 700; color: #5C2308; white-space: nowrap; padding-top: 2px; }
-    .data-value { font-size: 0.82rem; color: #1a0a00; font-weight: 500; border-bottom: 1px solid #d0bfaf; padding-bottom: 2px; min-height: 18px; }
+    .card-right { flex: 1; padding: 18px 20px; display: flex; flex-direction: column; }
+    .card-title { font-size: 0.85rem; font-weight: 900; color: #C84B1F; text-transform: uppercase; margin-bottom: 14px; }
+    .data-grid { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; align-items: flex-start; }
+    .data-label { font-size: 0.78rem; font-weight: 700; color: #5C2308; padding-top: 2px; white-space: nowrap; }
+    .data-value { font-size: 0.82rem; color: #1a0a00; border-bottom: 1px solid #d0bfaf; min-height: 18px; padding-bottom: 2px; font-weight: 500; }
 
     .card-footer { background: #fff; padding: 12px 20px; border-top: 1px solid #e8ddd0; }
     .auth-button {
       width: 100%; padding: 12px 16px; border-radius: 25px;
       color: #fff; font-size: 0.75rem; text-align: center;
       display: block; box-sizing: border-box; min-height: 40px;
-      font-weight: 700; font-style: italic; line-height: 1.35;
+      font-weight: 700; font-style: italic;
+      background: #C84B1F;
     }
-    .auth-button.btn-escolar { background: #C84B1F; }
-    .auth-button.btn-saida { background: #1e3a8a; }
-    .card-watermark { text-align: right; font-size: 0.6rem; color: #aaa; margin-top: 4px; }
+    .auth-button.btn-saida { background: #1e3a8a !important; }
 
-    /* ================================================================
-       FILA DE IMPRESSÃO — carteirinhas em tamanho físico cm 10x7
-       ================================================================ */
-    .pagina-impressao {
-      display: flex; flex-wrap: wrap;
-      gap: 10px; justify-content: center; width: 100%; margin-top: 2rem;
+    /* FILA IMPRESSÃO — 10cm x 7cm */
+    .pagina-impressao { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; width: 100%; margin-top: 2rem; }
+    .carteirinha-fila { 
+      width: 10cm; height: 7cm; background: #fff; border: 1px solid #ddd;
+      display: flex; flex-direction: column; overflow: hidden; position: relative;
+      page-break-inside: avoid; flex-shrink: 0;
     }
-
-    .carteirinha-fila {
-      width: 10cm; height: 7cm;
-      min-height: 7cm; max-height: 7cm;
-      background: #ffffff;
-      border-radius: 12px; overflow: hidden;
-      font-family: 'Outfit', sans-serif;
-      position: relative; border: 1px solid #ddd;
-      display: flex; flex-direction: column;
-      justify-content: flex-start; flex-shrink: 0;
-      box-sizing: border-box;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-      page-break-inside: avoid;
-    }
-
-    /* Estilos internos da fila (devem espelhar a estrutura mas em escala) */
-    .carteirinha-fila .card-header { height: 1.5cm; flex-shrink: 0; }
-    .carteirinha-fila .school-logo { width: 40px; height: 40px; }
-    .carteirinha-fila .school-name .line1 { font-size: 0.6rem; }
-    .carteirinha-fila .school-name .line2 { font-size: 0.8rem; }
-    .carteirinha-fila .card-body { flex: 1; min-height: 0; }
-    .carteirinha-fila .card-left { width: 3cm; padding: 10px 5px; }
-    .carteirinha-fila .photo-circle { width: 2.2cm; height: 2.2cm; }
-    .carteirinha-fila #qr-code-card { width: 1.4cm; height: 1.4cm; }
-    .carteirinha-fila .data-grid { gap: 2px 8px; }
-    .carteirinha-fila .data-label { font-size: 0.65rem; }
-    .carteirinha-fila .data-value { font-size: 0.7rem; min-height: 14px; }
-    .carteirinha-fila .auth-button { padding: 4px 8px; min-height: 25px; font-size: 0.6rem; }
-
-    /* ===== IMPRESSÃO ===== */
+    
+    /* REGRAS DE IMPRESSÃO A4 — AJUSTADO PARA NÃO CORTAR */
     @media print {
       @page { size: A4 portrait; margin: 0; }
-      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-
-      body { background: white !important; margin: 0; padding: 0; display: block !important; }
-
-      .nav-spa, .page-header, .form-panel, .preview-label, #carteirinha, .download-area, .btn-logout { display: none !important; }
-
-      .main-layout { display: block !important; margin: 0 !important; padding: 0 !important; }
-      .card-panel { display: block !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
-
-      .pagina-impressao {
-        display: grid !important;
-        grid-template-columns: repeat(2, 10cm) !important;
-        gap: 0 !important;
-        justify-content: center !important;
-        align-content: start !important;
-        width: 100% !important;
-      }
-
+      body { background: white !important; padding: 0; display: block !important; margin: 0; }
+      .nav-spa, .page-header, .form-panel, #carteirinha, .btn-logout, .preview-label { display: none !important; }
+      .main-layout { display: block !important; margin: 0; }
+      .pagina-impressao { display: grid !important; grid-template-columns: repeat(2, 10cm) !important; gap: 0 !important; width: 100%; justify-content: center; }
       .carteirinha-fila { box-shadow: none !important; margin: 0 !important; border: 1px solid #eee; }
+    }
+
+    /* RESPONSIVIDADE CELULAR */
+    @media (max-width: 720px) {
+      .main-layout { grid-template-columns: 1fr; }
+      #carteirinha { 
+        width: 100%; 
+        max-width: 680px; 
+        zoom: 0.5; 
+        margin: 0 auto;
+      }
+      .nav-spa { flex-wrap: wrap; justify-content: center; }
     }
   </style>
 </head>
 <body>
 
 <nav class="nav-spa">
-  <button class="nav-btn active" id="btn-sec-escolar" onclick="mostrarSecao('escolar')">&#128652; Transporte Escolar</button>
-  <button class="nav-btn" id="btn-sec-saida" onclick="mostrarSecao('saida')">&#128682; Saída Antecipada</button>
+  <button class="nav-btn active" id="btn-sec-escolar" onclick="mostrarSecao('escolar')">🚌 Transporte Escolar</button>
+  <button class="nav-btn" id="btn-sec-saida" onclick="mostrarSecao('saida')">🚪 Saída Antecipada</button>
 </nav>
 
 <header class="page-header">
-  <h1>&#127979; Gerador de Carteirinhas</h1>
-  <p>Escola Municipal Castro Alves</p>
-  <div style="display:flex;align-items:center;justify-content:center;gap:0.8rem;flex-wrap:wrap;margin-top:0.4rem;">
+  <h1 id="page-title">Gerador de Carteirinhas</h1>
+  <p id="page-subtitle">Escola Municipal Castro Alves</p>
+  <div id="status-container">
     <span class="db-status loading" id="db-status">
       <span class="dot"></span>
       <span id="db-status-text">Carregando dados...</span>
     </span>
-    <button class="btn-logout" onclick="fazerLogout()">Sair</button>
   </div>
+  <button class="btn-logout" onclick="fazerLogout()">Sair</button>
 </header>
 
 <div class="main-layout">
-
   <aside class="form-panel">
     <h2 id="form-title">📝 Dados do Aluno</h2>
     
     <div id="form-escolar">
       <div class="form-group">
         <label>Selecionar Aluno</label>
-        <select id="sel-aluno">
-          <option value="">Selecione...</option>
-        </select>
+        <select id="sel-aluno"><option value="">Selecione...</option></select>
       </div>
-      <div class="form-group"><label>Nome Completo *</label><input type="text" id="inp-nome" oninput="atualizar()"></div>
+      <div class="form-group"><label>Nome *</label><input type="text" id="inp-nome" oninput="atualizar()"></div>
       <div class="form-group"><label>Matrícula</label><input type="text" id="inp-matricula" oninput="atualizar()"></div>
-      <div class="form-group"><label>Data de Nascimento (D.N)</label><input type="text" id="inp-dn" oninput="atualizar()"></div>
+      <div class="form-group"><label>D.N</label><input type="text" id="inp-dn" oninput="atualizar()"></div>
       <div class="form-group"><label>Endereço</label><input type="text" id="inp-endereco" oninput="atualizar()"></div>
       <div class="form-group"><label>Linha *</label><input type="text" id="inp-linha" oninput="atualizar()"></div>
       <div class="form-group"><label>WhatsApp</label><input type="text" id="inp-tel" oninput="atualizarQR()"></div>
     </div>
 
     <div id="form-saida" style="display:none">
-      <div class="form-group"><label>Nome Completo *</label><input type="text" id="inp-saida-nome" oninput="atualizar()"></div>
+      <div class="form-group"><label>NomeCompleto *</label><input type="text" id="inp-saida-nome" oninput="atualizar()"></div>
       <div class="form-group"><label>Matrícula</label><input type="text" id="inp-saida-mat" oninput="atualizar()"></div>
       <div class="form-group"><label>Data de Nascimento (D.N)</label><input type="text" id="inp-saida-dn" oninput="atualizar()"></div>
       <div class="form-group"><label>Endereço</label><input type="text" id="inp-saida-end" oninput="atualizar()"></div>
     </div>
 
     <div class="form-group">
-      <label>Foto do Aluno</label>
-      <div class="photo-upload-area" onclick="document.getElementById('photo-input').click()">
-        <span>Clique para selecionar a foto</span>
-      </div>
+      <label>Foto</label>
+      <div class="photo-upload-area" onclick="document.getElementById('photo-input').click()"><span>Clique para foto</span></div>
       <input type="file" id="photo-input" accept="image/*" onchange="carregarFoto(this)">
     </div>
 
@@ -417,7 +256,7 @@
   </aside>
 
   <div class="card-panel">
-    <div class="preview-label">✏️ PRÉVIA — preencha e clique em "Adicionar à Folha"</div>
+    <div class="preview-label">PRÉVIA DA CARTEIRINHA</div>
     <div id="carteirinha">
       <div class="card-header header-escolar" id="card-header">
         <div class="school-logo-wrap">
@@ -438,9 +277,8 @@
           <div class="data-grid" id="data-display"></div>
         </div>
       </div>
-      <div class="card-footer"><div class="auth-button btn-escolar" id="card-footer-btn">Autorização</div></div>
+      <div class="card-footer"><div class="auth-button" id="card-footer-btn">Autorização</div></div>
     </div>
-
     <div class="pagina-impressao" id="fila-carteirinhas"></div>
   </div>
 </div>
@@ -451,18 +289,11 @@
   const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1_0Nr7rt1RClLouJ_g4saqU7JluswzIWf/gviz/tq?tqx=out:csv&sheet=Base%20de%20dados';
 
   function verificarAuth() {
-    try {
-      if (localStorage.getItem('castroalves_auth') !== 'ok') window.location.href = 'login.html';
-    } catch(e) { console.warn('Auth check error:', e); }
+    try { if (localStorage.getItem('castroalves_auth') !== 'ok') window.location.href = 'login.html'; } catch(e) {}
   }
   verificarAuth();
 
-  function fazerLogout() {
-    try {
-      localStorage.removeItem('castroalves_auth');
-      window.location.href = 'login.html';
-    } catch(e) { window.location.href = 'login.html'; }
-  }
+  function fazerLogout() { localStorage.removeItem('castroalves_auth'); window.location.href = 'login.html'; }
 
   function mostrarSecao(s) {
     secaoAtual = s;
@@ -470,12 +301,15 @@
     document.getElementById('btn-sec-' + s).classList.add('active');
     document.getElementById('form-escolar').style.display = s === 'escolar' ? 'block' : 'none';
     document.getElementById('form-saida').style.display = s === 'saida' ? 'block' : 'none';
+    document.getElementById('status-container').style.display = s === 'escolar' ? 'block' : 'none';
     
-    const header = document.getElementById('card-header');
-    header.className = 'card-header header-' + s;
-    
+    document.getElementById('card-header').className = 'card-header header-' + s;
     const btnFooter = document.getElementById('card-footer-btn');
     btnFooter.className = 'auth-button btn-' + s;
+    
+    setTimeout(() => {
+      atualizarQR();
+    }, 50);
     
     atualizar();
   }
@@ -484,17 +318,14 @@
     const statusEl = document.getElementById('db-status');
     const statusText = document.getElementById('db-status-text');
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    const tId = setTimeout(() => controller.abort(), 10000);
 
     try {
-      const urlComCache = SHEET_CSV_URL + '&t=' + Date.now();
-      const r = await fetch(urlComCache, { signal: controller.signal });
-      clearTimeout(timeoutId);
-      
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const t = await r.text();
-      
-      ALUNOS = t.trim().split('\n').slice(1).map(l => {
+      const resp = await fetch(SHEET_CSV_URL + '&t=' + Date.now(), { signal: controller.signal });
+      clearTimeout(tId);
+      if (!resp.ok) throw new Error();
+      const csv = await resp.text();
+      ALUNOS = csv.trim().split('\n').slice(1).map(l => {
         const c = l.split(',').map(v => v.replace(/^"|"$/g, '').trim());
         return { nome: c[0], mat: c[1], dn: c[2], tel: c[5], end: c[6], linha: c[7] };
       }).filter(a => a.nome);
@@ -502,15 +333,13 @@
       const sel = document.getElementById('sel-aluno');
       ALUNOS.forEach((a, i) => {
         const opt = document.createElement('option');
-        opt.value = i; opt.textContent = a.nome; sel.appendChild(opt);
+        opt.value = i; opt.innerText = a.nome; sel.appendChild(opt);
       });
-      
       statusEl.className = 'db-status loaded';
-      statusText.textContent = ALUNOS.length + ' alunos carregados';
+      statusText.innerText = ALUNOS.length + ' carregados';
     } catch(e) { 
-      clearTimeout(timeoutId);
       statusEl.className = 'db-status error'; 
-      statusText.textContent = (e.name === 'AbortError') ? 'Erro: Rede lenta (offline?)' : 'Aviso: Planilha indisponível';
+      statusText.innerText = 'Offline / Erro';
     }
   }
   carregarDados();
@@ -535,36 +364,26 @@
     if(secaoAtual === 'escolar') {
       const n = document.getElementById('inp-nome').value;
       const l = document.getElementById('inp-linha').value;
-      document.getElementById('card-title').textContent = 'IDENTIFICAÇÃO TRANSPORTE';
-      document.getElementById('card-footer-btn').textContent = 'Autorização para as crianças e/ou estudantes que utilizam transporte escolar';
+      document.getElementById('card-title').innerText = 'IDENTIFICAÇÃO TRANSPORTE';
+      document.getElementById('card-footer-btn').innerText = 'Autorização Transporte Escolar';
       
       const fields = [
-        ['Nome', n], 
-        ['Matrícula', document.getElementById('inp-matricula').value],
-        ['D.N', document.getElementById('inp-dn').value], 
-        ['Endereço', document.getElementById('inp-endereco').value],
+        ['Nome', n], ['Matrícula', document.getElementById('inp-matricula').value],
+        ['D.N', document.getElementById('inp-dn').value], ['Endereço', document.getElementById('inp-endereco').value],
         ['Linha', l]
       ];
-      fields.forEach(f => {
-        grid.innerHTML += `<div class="data-label">${f[0]}</div><div class="data-value">${f[1]}</div>`;
-      });
+      fields.forEach(f => grid.innerHTML += `<div class="data-label">${f[0]}</div><div class="data-value">${f[1]}</div>`);
       ok = n && l;
       document.getElementById('qr-container').style.display = 'flex';
     } else {
-      const n   = document.getElementById('inp-saida-nome').value;
-      const mat = document.getElementById('inp-saida-mat').value;
-      const dn  = document.getElementById('inp-saida-dn').value;
-      const end = document.getElementById('inp-saida-end').value;
-
-      document.getElementById('card-title').textContent = 'SAÍDA ANTECIPADA';
-      document.getElementById('card-footer-btn').textContent = 'Autorização para saída antecipada do estudante da unidade escolar';
-      
+      const n = document.getElementById('inp-saida-nome').value;
+      document.getElementById('card-title').innerText = 'SAÍDA ANTECIPADA';
+      document.getElementById('card-footer-btn').innerText = 'Autorização para saída antecipada do estudante';
       const fields = [
-        ['Nome', n], ['Matrícula', mat], ['D.N', dn], ['Endereço', end]
+        ['Nome', n], ['Matrícula', document.getElementById('inp-saida-mat').value],
+        ['D.N', document.getElementById('inp-saida-dn').value], ['Endereço', document.getElementById('inp-saida-end').value]
       ];
-      fields.forEach(f => {
-        grid.innerHTML += `<div class="data-label">${f[0]}</div><div class="data-value">${f[1]}</div>`;
-      });
+      fields.forEach(f => grid.innerHTML += `<div class="data-label">${f[0]}</div><div class="data-value">${f[1]}</div>`);
       ok = n;
       document.getElementById('qr-container').style.display = 'none';
     }
@@ -577,29 +396,23 @@
     r.onload = e => {
       const img = document.getElementById('photo-preview');
       img.src = e.target.result; img.style.display = 'block';
-      document.getElementById('photo-preview-wrap').style.background = 'none';
     }
     r.readAsDataURL(i.files[0]);
   }
 
   function atualizarQR() {
-    try {
-      const t = document.getElementById('inp-tel').value;
-      const c = document.getElementById('qr-code-card');
-      c.innerHTML = '';
-      if(t) new QRCode(c, { text: 'wa.me/55'+t.replace(/\D/g,''), width: 80, height: 80, colorDark: '#C84B1F' });
-    } catch(e) { console.error('QR Error:', e); }
+    const t = document.getElementById('inp-tel').value;
+    const c = document.getElementById('qr-code-card');
+    c.innerHTML = '';
+    if(t) new QRCode(c, { text: 'wa.me/55'+t.replace(/\D/g,''), width: 80, height: 80, colorDark: '#C84B1F' });
   }
 
   function adicionarNaFila() {
-    try {
-      const clone = document.getElementById('carteirinha').cloneNode(true);
-      clone.id = ''; clone.className = 'carteirinha-fila';
-      const qrOrig = document.getElementById('qr-code-card');
-      const qrDest = clone.querySelector('#qr-code-card');
-      if(qrDest) qrDest.innerHTML = qrOrig.innerHTML;
-      document.getElementById('fila-carteirinhas').appendChild(clone);
-    } catch(e) { alert('Erro ao adicionar à folha'); }
+    const clone = document.getElementById('carteirinha').cloneNode(true);
+    clone.id = ''; clone.className = 'carteirinha-fila';
+    const qrDest = clone.querySelector('#qr-code-card');
+    if(qrDest) qrDest.innerHTML = document.getElementById('qr-code-card').innerHTML;
+    document.getElementById('fila-carteirinhas').appendChild(clone);
   }
 
   function limparFila() { document.getElementById('fila-carteirinhas').innerHTML = ''; }
