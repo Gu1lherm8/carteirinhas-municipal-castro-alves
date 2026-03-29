@@ -962,8 +962,52 @@
     ];
 
     function atualizar() {
-      // Função original de atualização do preview (se houver lógica nela, mantenha aqui)
-      // No seu caso remoto, atualizar() costuma disparar a renderização do verso/frente
+      const display = document.getElementById('data-display');
+      if (!display) return;
+      display.innerHTML = '';
+      CAMPOS.forEach(c => {
+        const val = document.getElementById(c.id).value || '';
+        const item = document.createElement('div');
+        item.className = 'field ' + c.classe;
+        item.innerHTML = `
+          <div class="data-label">${c.label}</div>
+          <div class="data-value">${c.id === 'inp-nome' ? val.toUpperCase() : val}</div>
+        `;
+        display.appendChild(item);
+      });
+
+      // Ativar botão adicionar
+      const btn = document.getElementById('btn-adicionar');
+      btn.disabled = !document.getElementById('inp-nome').value.trim();
+    }
+
+    function atualizarQR() {
+      const tel = document.getElementById('inp-tel').value.replace(/\D/g, '');
+      const qrBox = document.getElementById('qr-code-card');
+      if (!qrBox) return;
+      qrBox.innerHTML = '';
+      if (tel) {
+        new QRCode(qrBox, {
+          text: `https://wa.me/55${tel}`,
+          width: 80,
+          height: 80,
+          colorDark: "#C84B1F",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+      }
+    }
+
+    function carregarFoto(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.getElementById('photo-preview');
+          img.src = e.target.result;
+          img.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
     }
 
     async function adicionarNaFila() {
