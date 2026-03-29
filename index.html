@@ -975,12 +975,13 @@
 
     function carregarFoto(input) {
       if (!input.files || !input.files[0]) return;
-      const rd = new FileReader();
-      rd.onload = e => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
         const img = document.getElementById('photo-preview');
-        img.src = e.target.result; img.style.display = 'block';
+        img.src = e.target.result;
+        img.style.display = 'block';
       };
-      rd.readAsDataURL(input.files[0]);
+      reader.readAsDataURL(input.files[0]);
     }
 
     function atualizarQR() {
@@ -994,11 +995,11 @@
 
     async function adicionarNaFila() {
       const imgPreview = document.getElementById('photo-preview');
-      const foto = imgPreview.src;
+      const fotoSrc = imgPreview.src;
       const fotoVis = imgPreview.style.display;
 
-      // Garantir que a imagem esteja totalmente carregada antes de prosseguir
-      if (fotoVis !== 'none' && foto && !imgPreview.complete) {
+      // Garantir que a imagem do preview esteja carregada (por segurança)
+      if (fotoVis !== 'none' && fotoSrc && !imgPreview.complete) {
         await new Promise(resolve => {
           imgPreview.onload = resolve;
           imgPreview.onerror = resolve;
@@ -1026,7 +1027,7 @@
       </div>
       <div class="card-body">
         <div class="card-left">
-          <div class="photo-circle">${fotoVis !== 'none' && foto ? `<img src="${foto}">` : ''}</div>
+          <div class="photo-circle">${fotoVis !== 'none' && fotoSrc ? `<img src="${fotoSrc}" class="print-photo">` : ''}</div>
           <div class="qr-area">
             <div>${qrDataUrl ? `<img src="${qrDataUrl}">` : ''}</div>
             <div class="qr-label">Contato</div>
@@ -1044,8 +1045,19 @@
       <div class="card-watermark">Castro Alves</div>
     `;
 
-      document.getElementById('pagina-resultado').appendChild(item);
+      const addedItem = document.getElementById('pagina-resultado').appendChild(item);
       atualizarContagem();
+
+      // Garantir que as imagens no clone recém-adicionado estejam totalmente carregadas
+      const imgs = addedItem.querySelectorAll('img');
+      const promises = Array.from(imgs).map(img => {
+        if (img.complete) return Promise.resolve();
+        return new Promise(resolve => {
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      });
+      await Promise.all(promises);
 
       const btn = document.getElementById('btn-adicionar');
       const orig = btn.innerHTML;
