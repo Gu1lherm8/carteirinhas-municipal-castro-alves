@@ -963,42 +963,42 @@
 
     function atualizar() {
       const grid = document.getElementById('data-display');
-         async function adicionarNaFila() {
-      const imgPreview = document.getElementById('photo-preview');
-      const fotoSrc = imgPreview.src;
-      const fotoVis = imgPreview.style.display;
+      async function adicionarNaFila() {
+        const imgPreview = document.getElementById('photo-preview');
+        const fotoSrc = imgPreview.src;
+        const fotoVis = imgPreview.style.display;
 
-      // Capturar o logotipo e garantir URL ABSOLUTA para o contexto de impressão
-      const logoOriginal = document.getElementById('img-logo');
-      let logoAbsoluto = "";
-      if (logoOriginal && logoOriginal.getAttribute('src')) {
-        // Converte caminho relativo (ex: ./logo.png) em absoluto (ex: https://.../logo.png)
-        logoAbsoluto = new URL(logoOriginal.getAttribute('src'), window.location.href).href;
-      }
+        // Capturar o logotipo e garantir URL ABSOLUTA para o contexto de impressão
+        const logoOriginal = document.getElementById('img-logo');
+        let logoAbsoluto = "";
+        if (logoOriginal && logoOriginal.getAttribute('src')) {
+          // Converte caminho relativo (ex: ./logo.png) em absoluto (ex: https://.../logo.png)
+          logoAbsoluto = new URL(logoOriginal.getAttribute('src'), window.location.href).href;
+        }
 
-      // Garantir que a imagem do preview esteja carregada antes de clonar
-      if (fotoVis !== 'none' && fotoSrc && !imgPreview.complete) {
-        await new Promise(resolve => {
-          imgPreview.onload = resolve;
-          imgPreview.onerror = resolve;
-        });
-      }
+        // Garantir que a imagem do preview esteja carregada antes de clonar
+        if (fotoVis !== 'none' && fotoSrc && !imgPreview.complete) {
+          await new Promise(resolve => {
+            imgPreview.onload = resolve;
+            imgPreview.onerror = resolve;
+          });
+        }
 
-      const tel = document.getElementById('inp-tel').value.replace(/\D/g, '');
+        const tel = document.getElementById('inp-tel').value.replace(/\D/g, '');
 
-      // Capturar QR como base64 (já é absoluto por natureza)
-      let qrDataUrl = '';
-      const qrBox = document.getElementById('qr-code-card');
-      const qrCanvas = qrBox.querySelector('canvas');
-      const qrImg = qrBox.querySelector('img');
-      if (qrCanvas) qrDataUrl = qrCanvas.toDataURL();
-      else if (qrImg && qrImg.src) qrDataUrl = qrImg.src;
+        // Capturar QR como base64 (já é absoluto por natureza)
+        let qrDataUrl = '';
+        const qrBox = document.getElementById('qr-code-card');
+        const qrCanvas = qrBox.querySelector('canvas');
+        const qrImg = qrBox.querySelector('img');
+        if (qrCanvas) qrDataUrl = qrCanvas.toDataURL();
+        else if (qrImg && qrImg.src) qrDataUrl = qrImg.src;
 
-      const item = document.createElement('div');
-      item.className = 'carteirinha-fila';
-      
-      // Template Injetado com URLs Absolutas
-      item.innerHTML = `
+        const item = document.createElement('div');
+        item.className = 'carteirinha-fila';
+
+        // Template Injetado com URLs Absolutas
+        item.innerHTML = `
       <div class="card-header">
         <div class="school-logo-wrap">
           <div class="school-logo"><img src="${logoAbsoluto}" crossorigin="anonymous"></div>
@@ -1052,35 +1052,35 @@
       </div>
       `;
 
-      document.getElementById('print-queue').appendChild(item);
+        document.getElementById('print-queue').appendChild(item);
 
-      // Aguarda o navegador processar as imagens no novo elemento
-      const imgsToLoad = Array.from(item.querySelectorAll('img'));
-      await Promise.all(imgsToLoad.map(img => {
-        if (img.complete) return Promise.resolve();
-        return new Promise(resolve => {
-          img.onload = resolve;
-          img.onerror = resolve;
-        });
-      }));
-    }
+        // Aguarda o navegador processar as imagens no novo elemento
+        const imgsToLoad = Array.from(item.querySelectorAll('img'));
+        await Promise.all(imgsToLoad.map(img => {
+          if (img.complete) return Promise.resolve();
+          return new Promise(resolve => {
+            img.onload = resolve;
+            img.onerror = resolve;
+          });
+        }));
+      }
 
 
-    function limparFila() {
-      document.getElementById('pagina-resultado').innerHTML = '';
-      atualizarContagem();
-    }
+      function limparFila() {
+        document.getElementById('pagina-resultado').innerHTML = '';
+        atualizarContagem();
+      }
 
-    function atualizarContagem() {
-      const total = document.getElementById('pagina-resultado').children.length;
-      const el = document.getElementById('fila-contagem');
-      el.textContent = total === 0
-        ? 'Nenhuma carteirinha adicionada ainda.'
-        : `${total} carteirinha(s) · ~${Math.ceil(total / 2)} folha(s) A4`;
-    }
+      function atualizarContagem() {
+        const total = document.getElementById('pagina-resultado').children.length;
+        const el = document.getElementById('fila-contagem');
+        el.textContent = total === 0
+          ? 'Nenhuma carteirinha adicionada ainda.'
+          : `${total} carteirinha(s) · ~${Math.ceil(total / 2)} folha(s) A4`;
+      }
 
-    window.onload = carregarDados;
-    atualizar();
+      window.onload = carregarDados;
+      atualizar();
   </script>
 </body>
 
