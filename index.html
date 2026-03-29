@@ -858,7 +858,7 @@
             <div class="photo-circle"><img id="photo-preview" src="" style="display:none"></div>
             <div class="qr-area">
               <div id="qr-code-card"></div>
-              <div class="qr-label">Contato do Respons&aacute;vel</div>
+              <div class="qr-label">CONTATO DO RESPONS&Aacute;VEL</div>
             </div>
           </div>
           <div class="card-right">
@@ -1008,12 +1008,12 @@
       const logoImg = document.getElementById('img-logo');
       const logoUrl = logoImg ? logoImg.src : '';
 
-      const qrCanvas = document.querySelector('#qrcode canvas');
+      const qrCanvas = document.querySelector('#qr-code-card canvas');
       const qrDataUrl = qrCanvas ? qrCanvas.toDataURL('image/png') : '';
 
-      const fotoPreview = document.getElementById('foto-preview');
-      const fotoSrc = fotoPreview ? fotoPreview.src : '';
-      const fotoVis = (fotoPreview && fotoSrc && fotoPreview.style.display !== 'none') ? 'block' : 'none';
+      const photoPreview = document.getElementById('photo-preview');
+      const fotoSrc = photoPreview ? photoPreview.src : '';
+      const fotoVis = (photoPreview && fotoSrc && photoPreview.style.display !== 'none') ? 'block' : 'none';
 
       const card = document.createElement('div');
       card.className = 'carteirinha-fila';
