@@ -246,8 +246,7 @@
     .photo-circle img { width: 100%; height: 100%; object-fit: cover; }
     .qr-area { display: flex; flex-direction: column; align-items: center; gap: 4px; }
     #qr-code-card { width: 80px; height: 80px; }
-    /* QR code container background fix */
-    #qr-code-card > div, #qr-code-card canvas, #qr-code-card img { width: 100% !important; height: 100% !important; }
+    #qr-code-card canvas, #qr-code-card img { width: 80px !important; height: 80px !important; }
     .qr-label { font-size: 0.68rem; font-weight: 700; color: #C84B1F; font-style: italic; text-align: center; }
 
     .card-right {
@@ -274,6 +273,7 @@
 
     /* ================================================================
        FILA DE IMPRESSÃO — carteirinhas em tamanho físico cm
+       (do index.html — evita problema de opacidade/sumiço de texto)
        ================================================================ */
     .fila-titulo {
       width: 100%; text-align: center;
@@ -290,7 +290,7 @@
       gap: 10px; justify-content: center; width: 100%;
     }
 
-    /* Carteirinha na fila: dimensão física fixa 10cm x 7cm */
+    /* Carteirinha na fila: dimensão física fixa — SEM problema de opacidade */
     .carteirinha-fila {
       width: 10cm; height: 7cm;
       min-height: 7cm; max-height: 7cm;
@@ -380,45 +380,84 @@
       justify-content: flex-start; overflow: hidden; min-width: 0;
     }
     .carteirinha-fila .card-title { font-size: 9px; font-weight: 900; color: #C84B1F; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.1; margin-bottom: 7px; }
-    .carteirinha-fila .data-grid { display: grid; grid-template-columns: auto 1fr; gap: 3px 6px; width: 100%; overflow: hidden; }
+    .carteirinha-fila .data-grid { display: flex; flex-direction: column; gap: 3px; width: 100%; overflow: hidden; }
+    .carteirinha-fila .linha-info { display: flex; align-items: baseline; gap: 4px; width: 100%; border-bottom: 1px solid #e8ddd0; padding-bottom: 1px; min-height: 0; overflow: hidden; }
 
     /* FIX OPACIDADE: cores fixas, nunca somem */
-    .carteirinha-fila .data-label { font-size: 7.5px; font-weight: 700; color: #5C2308; white-space: nowrap; text-transform: uppercase; line-height: 1.2; }
-    .carteirinha-fila .data-value { font-size: 9px; color: #1a0a00; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; border-bottom: 1px solid #d0bfaf; }
+    .carteirinha-fila .data-label { font-size: 7.5px; font-weight: 700; color: #5C2308; white-space: nowrap; flex-shrink: 0; text-transform: uppercase; line-height: 1.2; }
+    .carteirinha-fila .nome-destaque { font-size: 10px; font-weight: 900; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; flex: 1; min-width: 0; }
+    .carteirinha-fila .data-value { font-size: 9px; color: #333; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; flex: 1; min-width: 0; }
 
-    .carteirinha-fila .card-footer { background: #fff; padding: 6px 12px; border-top: 1px solid #e8ddd0; margin-top: auto; }
-    .carteirinha-fila .auth-button { width: 100%; padding: 4px 8px; background: #C84B1F !important; border-radius: 50px; color: #fff !important; font-size: 6.5px; font-weight: 700; text-align: center; line-height: 1.2; font-style: italic; }
+    .carteirinha-fila .card-footer-wrapper { flex: 0 0 1.25cm; height: 1.25cm; min-height: 1.25cm; display: flex; flex-direction: column; overflow: visible; flex-shrink: 0; position: relative; }
+    .carteirinha-fila .card-footer { background: transparent; padding: 4px 8px; display: flex; flex: 1; justify-content: center; align-items: center; position: relative; z-index: 2; }
+    .carteirinha-fila .auth-button { width: 100%; padding: 4px 8px; background: #C84B1F !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; border-radius: 50px; color: #fff !important; font-size: 6.5px; font-weight: 700; text-align: center; line-height: 1.2; font-style: italic; }
+    .carteirinha-fila .barra-inferior { height: 10px; width: 100%; flex-shrink: 0; background: #5C2308; }
+    .carteirinha-fila .footer-detail { position: absolute; bottom: 12px; right: 8px; font-size: 5px; font-weight: 700; color: rgba(255,255,255,0.6); z-index: 2; pointer-events: none; }
+
+    /* BARRA DE STATUS */
+    .download-area { display: flex; align-items: center; gap: 1rem; width: 680px; }
+    .download-status { flex: 1; font-size: 0.85rem; color: #a07050; }
+    .download-status.ready { color: #6db87a; }
+    .btn-print {
+      padding: 0.7rem 1.5rem;
+      background: linear-gradient(135deg, #c84b1f, #e8763a);
+      border: none; border-radius: 8px; color: white;
+      font-family: inherit; font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; gap: 0.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 15px rgba(200, 75, 31, 0.4);
+    }
+    .btn-print:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(200,75,31,0.5); }
 
     @media (max-width: 1080px) {
       .main-layout { grid-template-columns: 1fr; gap: 1rem; }
       .form-panel { position: static; margin-bottom: 2rem; }
+      .form-group select, .form-group input { font-size: 16px; }
       .card-panel { max-width: 100vw; overflow-x: auto; padding-bottom: 1rem; align-items: flex-start; }
       #carteirinha { width: 680px; min-width: 680px; }
+      .download-area { width: 100%; min-width: auto; }
     }
 
     /* ===== IMPRESSÃO ===== */
     @media print {
-      @page { size: A4 portrait; margin: 0; }
+      @page { size: A4 portrait; margin: 1cm; }
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
       body { background: white !important; margin: 0; padding: 0; display: block !important; }
 
       .page-header, .form-panel, .preview-label, #carteirinha,
-      .fila-titulo, .fila-contagem { display: none !important; }
+      .fila-titulo, .fila-contagem, .download-area { display: none !important; }
 
       .main-layout { display: block !important; margin: 0 !important; padding: 0 !important; }
       .card-panel { display: block !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
 
-      /* 2 carteirinhas por linha — 10cm cada */
+      /* 2 carteirinhas por linha — do index.html */
       .pagina-impressao {
         display: grid !important;
-        grid-template-columns: 10cm 10cm !important;
-        gap: 0 !important;
+        grid-template-columns: repeat(2, 10cm) !important;
+        gap: 8px !important;
         justify-content: center !important;
+        align-content: start !important;
         width: 100% !important;
       }
 
-      .carteirinha-fila { box-shadow: none !important; page-break-inside: avoid; margin: 0 !important; border: 1px solid #eee; }
+      .carteirinha-fila { box-shadow: none !important; page-break-inside: avoid; margin: 0 !important; }
+
+      /* FIX OPACIDADE IMPRESSÃO */
+      .carteirinha-fila * { opacity: 1 !important; visibility: visible !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .carteirinha-fila .data-label  { color: #5C2308 !important; }
+      .carteirinha-fila .data-value  { color: #333 !important; }
+      .carteirinha-fila .nome-destaque { color: #111 !important; }
+      .carteirinha-fila .card-title  { color: #C84B1F !important; }
+      .carteirinha-fila .auth-button { background: #C84B1F !important; color: #fff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .carteirinha-fila .card-footer-wrapper { overflow: visible !important; }
+      .carteirinha-fila .barra-inferior { background: #5C2308 !important; display: block !important; height: 10px !important; }
+      .carteirinha-fila .qr-label    { color: #C84B1F !important; }
+      /* QR e foto: proporção preservada */
+      .carteirinha-fila .photo-circle { width: 2.4cm !important; height: 2.4cm !important; min-width: 2.4cm !important; min-height: 2.4cm !important; border-radius: 50% !important; overflow: hidden !important; }
+      .carteirinha-fila .photo-circle img { width: 100% !important; height: 100% !important; object-fit: cover !important; aspect-ratio: 1/1 !important; }
+      .carteirinha-fila .qr-area > div:first-child { width: 1.6cm !important; height: 1.6cm !important; overflow: hidden !important; }
+      .carteirinha-fila .qr-area > div:first-child img { width: 100% !important; height: 100% !important; }
     }
   </style>
 </head>
@@ -430,78 +469,96 @@
   <div style="display:flex;align-items:center;justify-content:center;gap:0.8rem;flex-wrap:wrap;margin-top:0.4rem;">
     <span class="db-status loading" id="db-status">
       <span class="dot"></span>
-      <span id="db-status-text">Carregando dados...</span>
+      <span id="db-status-text">Carregando dados da planilha...</span>
     </span>
-    <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+    <button class="btn-logout" onclick="fazerLogout()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      Sair
+    </button>
   </div>
 </header>
 
 <div class="main-layout">
 
-  <!-- FORMULÁRIO -->
+  <!-- FORMULÁRIO — ORIGINAL INTOCADO -->
   <aside class="form-panel">
     <h2>&#128221; Dados do Aluno</h2>
 
     <div class="form-group">
-      <label>Selecionar Aluno</label>
+      <label>Selecionar Aluno da Lista</label>
       <select id="sel-aluno">
-        <option value="">Selecione na lista...</option>
+        <option value="">&#8212; Selecione ou preencha manualmente &#8212;</option>
       </select>
     </div>
     <div class="form-group">
       <label>Nome Completo *</label>
-      <input type="text" id="inp-nome" oninput="atualizar()">
+      <input type="text" id="inp-nome" placeholder="Nome do aluno" oninput="atualizar()">
     </div>
     <div class="form-group">
       <label>Matr&iacute;cula</label>
-      <input type="text" id="inp-matricula" oninput="atualizar()">
+      <input type="text" id="inp-matricula" placeholder="Ex: 2024001" oninput="atualizar()">
     </div>
     <div class="form-group">
-      <label>Data de Nascimento (D.N)</label>
+      <label>Data de Nascimento</label>
       <input type="text" id="inp-dn" placeholder="DD/MM/AAAA" oninput="atualizar()">
     </div>
     <div class="form-group">
       <label>Endere&ccedil;o</label>
-      <input type="text" id="inp-endereco" oninput="atualizar()">
+      <input type="text" id="inp-endereco" placeholder="Rua, Quadra, Setor..." oninput="atualizar()">
     </div>
     <div class="form-group">
-      <label>Linha *</label>
-      <input type="text" id="inp-linha" oninput="atualizar()">
+      <label>Linha do &Ocirc;nibus *</label>
+      <input type="text" id="inp-linha" placeholder="Ex: Linha 44" oninput="atualizar()">
     </div>
     <div class="form-group">
-      <label>WhatsApp (QR Code)</label>
-      <input type="text" id="inp-tel" placeholder="619..." oninput="atualizarQR()">
+      <label>Telefone do Respons&aacute;vel (WhatsApp)</label>
+      <input type="text" id="inp-tel" placeholder="Ex: 61999999999" oninput="atualizarQR()">
     </div>
     <div class="form-group">
-      <label>Foto</label>
+      <label>Foto do Aluno</label>
       <div class="photo-upload-area" onclick="document.getElementById('photo-input').click()">
-        <span>Clique para carregar</span>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c89060" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <span>Clique para selecionar a foto</span>
       </div>
       <input type="file" id="photo-input" accept="image/*" onchange="carregarFoto(this)">
     </div>
 
     <div class="btn-actions">
-      <button class="btn-add" id="btn-adicionar" onclick="adicionarNaFila()" disabled>➕ Adicionar &agrave; Folha</button>
-      <button class="btn-download" onclick="window.print()">🖨️ Imprimir Folha</button>
-      <button class="btn-limpar" onclick="limparFila()">🗑️ Limpar Folha</button>
+      <button class="btn-add" id="btn-adicionar" onclick="adicionarNaFila()" disabled>
+        &#10133; Adicionar à Folha
+      </button>
+      <button class="btn-download" onclick="window.print()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>
+        &#128229; Imprimir Folha
+      </button>
+      <button class="btn-limpar" onclick="limparFila()">
+        &#128465; Limpar Folha
+      </button>
     </div>
   </aside>
 
-  <!-- ÁREA DO CARD -->
+  <!-- ÁREA DA CARTEIRINHA -->
   <div class="card-panel">
-    <div class="preview-label">✏️ PRÉVIA EXCLUSIVA (Design Original)</div>
+
+    <!-- PRÉVIA original — design intocado -->
+    <div class="preview-label">✏️ PRÉVIA — preencha os dados e clique em "Adicionar à Folha"</div>
     <div id="carteirinha">
       <div class="card-header">
         <div class="school-logo-wrap">
           <div class="school-logo">
-            <img id="logo-img" src="logo_escola.png" alt="Logo" onerror="this.src='https://via.placeholder.com/64'">
+            <img id="logo-escola" src="logo_escola.png" alt="Logo" onerror="this.src='https://via.placeholder.com/64'">
           </div>
-          <div class="school-name"><div class="line1">Escola Municipal</div><div class="line2">Castro Alves</div></div>
+          <div class="school-name">
+            <div class="line1">Escola Municipal</div>
+            <div class="line2">Castro Alves</div>
+          </div>
         </div>
       </div>
       <div class="card-body">
         <div class="card-left">
-          <div class="photo-circle" id="photo-wrap"><img id="photo-preview" src="" style="display:none"></div>
+          <div class="photo-circle">
+            <img id="photo-preview" src="" style="display:none">
+          </div>
           <div class="qr-area">
             <div id="qr-code-card"></div>
             <div class="qr-label">Contato</div>
@@ -516,6 +573,7 @@
       </div>
       <div class="card-footer">
         <div class="auth-button">Autorização para as crianças e/ou estudantes que utilizam transporte escolar</div>
+        <div class="card-watermark">Escola Municipal Castro Alves</div>
       </div>
     </div>
 
@@ -528,7 +586,7 @@
 
 <script>
   /**
-   * CONFIGURAÇÃO E CONEXÃO COM BANCO DE DADOS (GOOGLE SHEETS)
+   * CONFIGURAÇÃO E CONEXÃO COM BANCO DE DADOS (GOOGLE SHEETS) - CIRÚRGICO
    */
   const LOG_AUTH_KEY = 'castroalves_auth';
   const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1_0Nr7rt1RClLouJ_g4saqU7JluswzIWf/gviz/tq?tqx=out:csv&sheet=Base%20de%20dados';
@@ -545,43 +603,29 @@
     window.location.href = 'login.html';
   }
 
-  /**
-   * FUNÇÃO PRINCIPAL: CARREGAR DADOS DA PLANILHA
-   * Resolve o problema de os dados não aparecerem na tela.
-   */
   async function carregarBaseDeDados() {
     const statusEl = document.getElementById('db-status');
     const statusTxt = document.getElementById('db-status-text');
     
-    // Timer de timeout para não travar o carregamento
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     try {
-      // Fetch com timestamp para evitar cache do navegador
       const response = await fetch(SHEET_CSV_URL + '&t=' + Date.now(), { signal: controller.signal });
       clearTimeout(timeoutId);
       
       if (!response.ok) throw new Error('Falha na resposta');
-
       const data = await response.text();
       
-      // Parse CSV simples (considerando que a primeira linha é o cabeçalho)
       const linhas = data.split('\n');
       ALUNOS = [];
       const select = document.getElementById('sel-aluno');
-      
-      // Limpar select mantendo a primeira opção
-      select.innerHTML = '<option value="">Selecione na lista...</option>';
+      select.innerHTML = '<option value="">&#8212; Selecione ou preencha manualmente &#8212;</option>';
 
       for (let i = 1; i < linhas.length; i++) {
         if (!linhas[i].trim()) continue;
-        
-        // Regex para lidar com vírgulas dentro de aspas se houver
         const colunas = linhas[i].split(',').map(c => c.replace(/^"|"$/g, '').trim());
         
-        // Mapeamento baseado na estrutura da sua planilha
-        // Indice 0: Nome, 1: Matrícula, 2: D.N, 5: Tel, 6: Endereço, 7: Linha
         if (colunas[0]) {
           const aluno = {
             nome: colunas[0],
@@ -599,10 +643,8 @@
           select.appendChild(opt);
         }
       }
-
       statusEl.className = 'db-status loaded';
       statusTxt.textContent = `${ALUNOS.length} alunos carregados`;
-      
     } catch (error) {
       console.error('Erro ao carregar planilha:', error);
       statusEl.className = 'db-status error';
@@ -610,7 +652,6 @@
     }
   }
 
-  // Evento de seleção de aluno
   document.getElementById('sel-aluno').addEventListener('change', function() {
     const idx = this.value;
     if (idx !== "") {
@@ -621,14 +662,13 @@
       document.getElementById('inp-endereco').value = a.end;
       document.getElementById('inp-linha').value = a.linha;
       document.getElementById('inp-tel').value = a.tel;
-      
       atualizar();
       atualizarQR();
     }
   });
 
   /**
-   * LÓGICA DE ATUALIZAÇÃO DA INTERFACE
+   * LÓGICA DE INTERFACE E IMPRESSÃO - RESTAURADO ORIGINAL
    */
   function atualizar() {
     const nome = document.getElementById('inp-nome').value;
@@ -650,7 +690,6 @@
       .map(f => `<div class="data-label">${f[0]}</div><div class="data-value">${f[1]}</div>`)
       .join('');
 
-    // Habilitar botão apenas se campos obrigatórios estiverem preenchidos
     document.getElementById('btn-adicionar').disabled = !(nome && linha);
   }
 
@@ -683,16 +722,16 @@
   }
 
   function adicionarNaFila() {
-    const containerItem = document.createElement('div');
-    containerItem.className = 'carteirinha-fila';
-    
-    // Criamos o HTML interno baseado no design do card original, mas para a fila
     const nome = document.getElementById('inp-nome').value;
     const mat = document.getElementById('inp-matricula').value;
     const dn = document.getElementById('inp-dn').value;
     const end = document.getElementById('inp-endereco').value;
     const linha = document.getElementById('inp-linha').value;
+    const tel = document.getElementById('inp-tel').value;
     const fotoSrc = document.getElementById('photo-preview').src;
+
+    const containerItem = document.createElement('div');
+    containerItem.className = 'carteirinha-fila';
     
     containerItem.innerHTML = `
       <div class="card-header">
@@ -703,36 +742,40 @@
       </div>
       <div class="card-body">
         <div class="card-left">
-          <div class="photo-circle">${fotoSrc ? `<img src="${fotoSrc}">` : ''}</div>
+          <div class="photo-circle">
+            ${fotoSrc ? `<img src="${fotoSrc}">` : ''}
+          </div>
           <div class="qr-area">
-             <div class="qr-code-img"></div>
+             <div class="qr-target"></div>
              <div class="qr-label">Contato</div>
           </div>
         </div>
         <div class="card-right">
           <div class="card-title">IDENTIFICAÇÃO TRANSPORTE</div>
           <div class="data-grid">
-            <div class="data-label">NOME</div><div class="data-value">${nome}</div>
-            <div class="data-label">MATRÍCULA</div><div class="data-value">${mat}</div>
-            <div class="data-label">D.N</div><div class="data-value">${dn}</div>
-            <div class="data-label">ENDEREÇO</div><div class="data-value">${end}</div>
-            <div class="data-label">LINHA</div><div class="data-value">${linha}</div>
+            <div class="linha-info"><div class="data-label">NOME:</div><div class="nome-destaque">${nome}</div></div>
+            <div class="linha-info"><div class="data-label">MATRÍCULA:</div><div class="data-value">${mat}</div></div>
+            <div class="linha-info"><div class="data-label">D.N:</div><div class="data-value">${dn}</div></div>
+            <div class="linha-info"><div class="data-label">ENDEREÇO:</div><div class="data-value">${end}</div></div>
+            <div class="linha-info"><div class="data-label">LINHA:</div><div class="data-value">${linha}</div></div>
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <div class="auth-button">Autorização para as crianças e/ou estudantes que utilizam transporte escolar</div>
+      <div class="card-footer-wrapper">
+        <div class="card-footer">
+          <div class="auth-button">Autorização para as crianças e/ou estudantes que utilizam transporte escolar</div>
+        </div>
+        <div class="barra-inferior"></div>
+        <div class="footer-detail">Castro Alves</div>
       </div>
     `;
 
-    // Gerar o QR code específico para este card na fila
-    const tel = document.getElementById('inp-tel').value.replace(/\D/g, '');
-    if (tel) {
-      const qrTarget = containerItem.querySelector('.qr-code-img');
+    const qrTarget = containerItem.querySelector('.qr-target');
+    if (tel.replace(/\D/g, '').length >= 10) {
       new QRCode(qrTarget, {
-        text: `https://wa.me/55${tel}`,
-        width: 60,
-        height: 60,
+        text: `https://wa.me/55${tel.replace(/\D/g, '')}`,
+        width: 128,
+        height: 128,
         colorDark: "#C84B1F"
       });
     }
@@ -746,7 +789,6 @@
     }
   }
 
-  // Inicializar carregamento
   window.onload = carregarBaseDeDados;
 </script>
 </body>
