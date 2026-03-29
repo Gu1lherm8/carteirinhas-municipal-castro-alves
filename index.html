@@ -1094,7 +1094,7 @@
       </div>
       `;
 
-      document.getElementById('print-queue').appendChild(item);
+      document.getElementById('pagina-resultado').appendChild(item);
       atualizarContagem();
 
       // Aguarda o navegador processar as imagens no novo elemento
@@ -1109,12 +1109,13 @@
     }
 
     function limparFila() {
-      document.getElementById('print-queue').innerHTML = '';
+      document.getElementById('pagina-resultado').innerHTML = '';
       atualizarContagem();
     }
 
     function atualizarContagem() {
-      const total = document.getElementById('print-queue').children.length;
+      const parent = document.getElementById('pagina-resultado');
+      const total = parent ? parent.children.length : 0;
       const el = document.getElementById('fila-contagem');
       if (el) {
         el.textContent = total === 0
