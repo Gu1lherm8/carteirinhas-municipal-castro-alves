@@ -164,7 +164,8 @@
     .data-grid { display: flex; flex-direction: column; gap: 10px; }
     .data-item { display: flex; flex-direction: column; border-bottom: 1px solid #d0bfaf; padding-bottom: 4px; }
     .data-label { font-size: 0.75rem; font-weight: 700; color: #5C2308; text-transform: uppercase; }
-    .data-value { font-size: 0.95rem; color: #1a0a00; font-weight: 500; min-height: 20px; text-transform: uppercase; }
+    .data-value { font-size: 0.95rem; color: #1a0a00; font-weight: 500; min-height: 20px; }
+    .data-value.destaque { font-weight: 900 !important; font-size: 1.1rem; color: #000; }
 
     /* BARRA INFERIOR ABSOLUTA — NÃO MOVE NADA */
     .card-footer-box {
@@ -202,14 +203,11 @@
     .carteirinha-fila .data-grid { gap: 4px; }
     .carteirinha-fila .data-label { font-size: 6.5px; }
     .carteirinha-fila .data-value { font-size: 8.5px; min-height: 12px; padding-bottom: 1px; }
+    .carteirinha-fila .data-value.destaque { font-size: 9.5px; font-weight: 900 !important; color: #000; }
 
     .carteirinha-fila .auth-bar { padding: 4px 10px; font-size: 6.5px; }
     .carteirinha-fila .bottom-stripe { height: 8px; }
-    .carteirinha-fila .card-watermark { bottom
-      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-      body { background: white !important; padding: 0; margin: 0; display: block !important; }
-      .page-header, .form-panel, .preview-label, #carteirinha, .fila-titulo { display: none !important; }
-      .pagina-impressao { display: grid !important; grid-template-colu: 9px; right: 10px; font-size: 5px; }
+    .carteirinha-fila .card-watermark { bottom: 9px; right: 10px; font-size: 5px; }
 
     @media (max-width: 1080px) {
       .main-layout { grid-template-columns: 1fr; }
@@ -218,7 +216,11 @@
     }
 
     @media print {
-      @page { size: A4 portrait; margin: 0.4cm; }mns: repeat(2, 10cm) !important; gap: 2mm !important; justify-content: center !important; margin: 0 auto; width: 100%; }
+      @page { size: A4 portrait; margin: 0.4cm; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: white !important; padding: 0; margin: 0; display: block !important; }
+      .page-header, .form-panel, .preview-label, #carteirinha, .fila-titulo { display: none !important; }
+      .pagina-impressao { display: grid !important; grid-template-columns: repeat(2, 10cm) !important; gap: 2mm !important; justify-content: center !important; margin: 0 auto; width: 100%; }
       .carteirinha-fila { box-shadow: none !important; border: 1px solid #ccc !important; page-break-inside: avoid; margin: 0; }
     }
   </style>
@@ -329,7 +331,7 @@
 
   function atualizar() {
     const list = [['NOME', 'inp-nome'], ['MATRÍCULA', 'inp-matricula'], ['D.N', 'inp-dn'], ['ENDEREÇO', 'inp-endereco'], ['LINHA', 'inp-linha']];
-    document.getElementById('data-display').innerHTML = list.map(f => `<div class="data-item"><div class="data-label">${f[0]}</div><div class="data-value">${document.getElementById(f[1]).value}</div></div>`).join('');
+    document.getElementById('data-display').innerHTML = list.map((f, i) => `<div class="data-item"><div class="data-label">${f[0]}</div><div class="data-value ${i === 0 ? 'destaque' : ''}">${document.getElementById(f[1]).value}</div></div>`).join('');
     document.getElementById('btn-adicionar').disabled = !document.getElementById('inp-nome').value;
   }
 
